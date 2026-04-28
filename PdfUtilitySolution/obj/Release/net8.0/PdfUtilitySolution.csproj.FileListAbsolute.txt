@@ -1,0 +1,11 @@
+D:\workspace\PdfUtilitySolution\PdfUtilitySolution\bin\Release\net8.0\PdfUtilitySolution.deps.json
+D:\workspace\PdfUtilitySolution\PdfUtilitySolution\bin\Release\net8.0\PdfUtilitySolution.dll
+D:\workspace\PdfUtilitySolution\PdfUtilitySolution\bin\Release\net8.0\PdfUtilitySolution.pdb
+D:\workspace\PdfUtilitySolution\PdfUtilitySolution\obj\Release\net8.0\PdfUtilitySolution.GeneratedMSBuildEditorConfig.editorconfig
+D:\workspace\PdfUtilitySolution\PdfUtilitySolution\obj\Release\net8.0\PdfUtilitySolution.AssemblyInfoInputs.cache
+D:\workspace\PdfUtilitySolution\PdfUtilitySolution\obj\Release\net8.0\PdfUtilitySolution.AssemblyInfo.cs
+D:\workspace\PdfUtilitySolution\PdfUtilitySolution\obj\Release\net8.0\PdfUtilitySolution.csproj.CoreCompileInputs.cache
+D:\workspace\PdfUtilitySolution\PdfUtilitySolution\obj\Release\net8.0\PdfUtilitySolution.dll
+D:\workspace\PdfUtilitySolution\PdfUtilitySolution\obj\Release\net8.0\refint\PdfUtilitySolution.dll
+D:\workspace\PdfUtilitySolution\PdfUtilitySolution\obj\Release\net8.0\PdfUtilitySolution.pdb
+D:\workspace\PdfUtilitySolution\PdfUtilitySolution\obj\Release\net8.0\ref\PdfUtilitySolution.dll

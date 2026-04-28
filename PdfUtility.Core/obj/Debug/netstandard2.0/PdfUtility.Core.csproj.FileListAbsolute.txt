@@ -1,0 +1,10 @@
+D:\workspace\PdfUtilitySolution\PdfUtility.Core\obj\Debug\netstandard2.0\PdfUtility.Core.csproj.AssemblyReference.cache
+D:\workspace\PdfUtilitySolution\PdfUtility.Core\obj\Debug\netstandard2.0\PdfUtility.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\workspace\PdfUtilitySolution\PdfUtility.Core\obj\Debug\netstandard2.0\PdfUtility.Core.AssemblyInfoInputs.cache
+D:\workspace\PdfUtilitySolution\PdfUtility.Core\obj\Debug\netstandard2.0\PdfUtility.Core.AssemblyInfo.cs
+D:\workspace\PdfUtilitySolution\PdfUtility.Core\obj\Debug\netstandard2.0\PdfUtility.Core.csproj.CoreCompileInputs.cache
+D:\workspace\PdfUtilitySolution\PdfUtility.Core\bin\Debug\netstandard2.0\PdfUtility.Core.deps.json
+D:\workspace\PdfUtilitySolution\PdfUtility.Core\bin\Debug\netstandard2.0\PdfUtility.Core.dll
+D:\workspace\PdfUtilitySolution\PdfUtility.Core\bin\Debug\netstandard2.0\PdfUtility.Core.pdb
+D:\workspace\PdfUtilitySolution\PdfUtility.Core\obj\Debug\netstandard2.0\PdfUtility.Core.dll
+D:\workspace\PdfUtilitySolution\PdfUtility.Core\obj\Debug\netstandard2.0\PdfUtility.Core.pdb

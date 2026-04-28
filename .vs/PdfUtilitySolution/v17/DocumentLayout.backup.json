@@ -1,0 +1,357 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\workspace\\PdfUtilitySolution\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\internal\\drawcommandrenderer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\internal\\drawcommandrenderer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\internal\\fontresource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\internal\\fontresource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\internal\\pdfdocumentcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\internal\\pdfdocumentcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\internal\\pdfimagehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\internal\\pdfimagehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\internal\\pdfrawparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\internal\\pdfrawparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\helpers\\fonthelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\helpers\\fonthelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\exceptions\\pdfrenderexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\exceptions\\pdfrenderexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\exceptions\\pdfloadexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\exceptions\\pdfloadexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\exceptions\\pdfexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\exceptions\\pdfexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\documents\\pdfdocumentinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\documents\\pdfdocumentinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\documents\\pdfpageinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\documents\\pdfpageinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\drawing\\textdrawcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\drawing\\textdrawcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\drawing\\rectangledrawcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\drawing\\rectangledrawcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\drawing\\pdfverticalalign.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\drawing\\pdfverticalalign.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\drawing\\pdfhorizontalalign.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\drawing\\pdfhorizontalalign.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\drawing\\pdfdrawcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\drawing\\pdfdrawcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\drawing\\pdfcolor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\drawing\\pdfcolor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\drawing\\linedrawcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\drawing\\linedrawcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\drawing\\imagedrawcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\drawing\\imagedrawcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.core\\pdfincrementalwriter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E0F4E15-1440-49A8-82C2-426FC0241E0D}|PdfUtility.Core\\PdfUtility.Core.csproj|solutionrelative:pdfutility.core\\pdfincrementalwriter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B60367B8-C728-4C2E-94F5-B87851A979E3}|PdfUtilitySolution\\PdfUtilitySolution.csproj|d:\\workspace\\pdfutilitysolution\\pdfutilitysolution\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B60367B8-C728-4C2E-94F5-B87851A979E3}|PdfUtilitySolution\\PdfUtilitySolution.csproj|solutionrelative:pdfutilitysolution\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PdfImageHelper.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\PdfImageHelper.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Internal\\PdfImageHelper.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\PdfImageHelper.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Internal\\PdfImageHelper.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T01:56:23.982Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FontResource.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\FontResource.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Internal\\FontResource.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\FontResource.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Internal\\FontResource.cs",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAcwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T01:56:14.174Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DrawCommandRenderer.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\DrawCommandRenderer.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Internal\\DrawCommandRenderer.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\DrawCommandRenderer.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Internal\\DrawCommandRenderer.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T01:56:06.667Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "FontHelper.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Helpers\\FontHelper.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Helpers\\FontHelper.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Helpers\\FontHelper.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Helpers\\FontHelper.cs",
+              "ViewState": "AgIAAFMBAAAAAAAAAAAAwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T01:55:52.508Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PdfRenderException.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Exceptions\\PdfRenderException.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Exceptions\\PdfRenderException.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Exceptions\\PdfRenderException.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Exceptions\\PdfRenderException.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T01:55:50.618Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "TextDrawCommand.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\TextDrawCommand.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\TextDrawCommand.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\TextDrawCommand.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Drawing\\TextDrawCommand.cs",
+              "ViewState": "AgIAACgAAAAAAAAAAAA4wAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T01:55:33.634Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "RectangleDrawCommand.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\RectangleDrawCommand.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\RectangleDrawCommand.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\RectangleDrawCommand.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Drawing\\RectangleDrawCommand.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T01:55:28.053Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PdfRawParser.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\PdfRawParser.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Internal\\PdfRawParser.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\PdfRawParser.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Internal\\PdfRawParser.cs",
+              "ViewState": "AgIAAHEDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T11:39:26.227Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PdfDocumentContext.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\PdfDocumentContext.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Internal\\PdfDocumentContext.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\PdfDocumentContext.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Internal\\PdfDocumentContext.cs",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T11:39:23.518Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "PdfVerticalAlign.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\PdfVerticalAlign.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\PdfVerticalAlign.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\PdfVerticalAlign.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Drawing\\PdfVerticalAlign.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T01:55:26.95Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "PdfHorizontalAlign.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\PdfHorizontalAlign.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\PdfHorizontalAlign.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\PdfHorizontalAlign.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Drawing\\PdfHorizontalAlign.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T01:54:38.532Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "PdfDrawCommand.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\PdfDrawCommand.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\PdfDrawCommand.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\PdfDrawCommand.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Drawing\\PdfDrawCommand.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T01:55:12.436Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "PdfPageInfo.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Documents\\PdfPageInfo.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Documents\\PdfPageInfo.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Documents\\PdfPageInfo.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Documents\\PdfPageInfo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T11:38:53.386Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "PdfDocumentInfo.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Documents\\PdfDocumentInfo.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Documents\\PdfDocumentInfo.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Documents\\PdfDocumentInfo.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Documents\\PdfDocumentInfo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T11:38:45.789Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PdfException.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Exceptions\\PdfException.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Exceptions\\PdfException.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Exceptions\\PdfException.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Exceptions\\PdfException.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T11:39:02.594Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PdfLoadException.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Exceptions\\PdfLoadException.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Exceptions\\PdfLoadException.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Exceptions\\PdfLoadException.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Exceptions\\PdfLoadException.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T11:39:04.053Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "PdfColor.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\PdfColor.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\PdfColor.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\PdfColor.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Drawing\\PdfColor.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAIwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T01:54:55.274Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "LineDrawCommand.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\LineDrawCommand.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\LineDrawCommand.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\LineDrawCommand.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Drawing\\LineDrawCommand.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T01:54:52.455Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "ImageDrawCommand.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\ImageDrawCommand.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\ImageDrawCommand.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\ImageDrawCommand.cs",
+              "RelativeToolTip": "PdfUtility.Core\\Drawing\\ImageDrawCommand.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T01:54:48.672Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "PdfIncrementalWriter.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\PdfIncrementalWriter.cs",
+              "RelativeDocumentMoniker": "PdfUtility.Core\\PdfIncrementalWriter.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\PdfIncrementalWriter.cs",
+              "RelativeToolTip": "PdfUtility.Core\\PdfIncrementalWriter.cs",
+              "ViewState": "AgIAAFsBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T11:39:06.843Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Class1.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtilitySolution\\Class1.cs",
+              "RelativeDocumentMoniker": "PdfUtilitySolution\\Class1.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtilitySolution\\Class1.cs",
+              "RelativeToolTip": "PdfUtilitySolution\\Class1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-21T11:46:56.672Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

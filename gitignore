@@ -1,0 +1,87 @@
+# ============================================
+# PdfUtilitySolution .gitignore
+# ============================================
+
+# ビルド出力
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# ユーザー設定
+*.rsuser
+*.suo
+*.user
+*.userosscache
+
+# ビルド結果
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# NuGetパッケージ
+*.nupkg
+*.snupkg
+packages/
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+# テスト出力
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+# ============================================
+# プロジェクト固有の除外
+# ============================================
+
+# PDF出力フォルダ（テスト出力物）
+output/
+
+# テストデータ全体
+testdata/
+
+# フォントファイル（ライセンス上アップ禁止）
+testdata/fonts/
+*.ttc
+*.ttf
+*.otf
+
+# PDFファイル（テスト用）
+*.pdf
+
+# ログファイル
+*.log
+logs/
+
+# ============================================
+# OS固有
+# ============================================
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS（念のため）
+.DS_Store
+.AppleDouble
+.LSOverride

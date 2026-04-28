@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "PdfUtility.SampleApp/1.0.0": {
+        "dependencies": {
+          "PdfUtility.Core": "1.0.0"
+        },
+        "runtime": {
+          "PdfUtility.SampleApp.dll": {}
+        }
+      },
+      "PdfUtility.Core/1.0.0": {
+        "runtime": {
+          "PdfUtility.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "PdfUtility.SampleApp/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "PdfUtility.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
