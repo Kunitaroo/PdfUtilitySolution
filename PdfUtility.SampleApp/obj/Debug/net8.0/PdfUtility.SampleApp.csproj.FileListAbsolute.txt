@@ -16,3 +16,4 @@ D:\workspace\PdfUtilitySolution\PdfUtility.SampleApp\obj\Debug\net8.0\refint\Pdf
 D:\workspace\PdfUtilitySolution\PdfUtility.SampleApp\obj\Debug\net8.0\PdfUtility.SampleApp.pdb
 D:\workspace\PdfUtilitySolution\PdfUtility.SampleApp\obj\Debug\net8.0\PdfUtility.SampleApp.genruntimeconfig.cache
 D:\workspace\PdfUtilitySolution\PdfUtility.SampleApp\obj\Debug\net8.0\ref\PdfUtility.SampleApp.dll
+D:\workspace\PdfUtilitySolution\PdfUtility.SampleApp\obj\Debug\net8.0\PdfUtility.SampleApp.sourcelink.json

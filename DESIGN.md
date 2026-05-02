@@ -31,19 +31,10 @@
 | PdfUtility.Barcode | C# | .NET Standard 2.0 |
 | PdfUtility.SampleApp | C# | .NET 8.0 / Console App |
 | PdfUtility.Tests | C# | .NET 8.0 / MSTest |
-| PdfUtility.PreviewWeb | C# | .NET 8.0 / ASP.NET Core |
+| PdfUtility.PreviewApp | C# | .NET 8.0 / WPF |
 
 ### PDF追記方式
 **インクリメンタルアップデート**方式を採用する。
-
-```
-既存PDFバイト列（一切変更しない）
-    ↓ 末尾に追加
-追記コンテンツ（新オブジェクト群）
-新xrefテーブル
-新トレイラー
-%%EOF
-```
 
 既存部分を触らないため、元PDFの破損リスクがゼロ。
 
@@ -67,7 +58,7 @@ PdfUtilitySolution
 ├── PdfUtility.Barcode       ← バーコード専用DLL
 ├── PdfUtility.SampleApp     ← 動作確認用コンソールアプリ
 ├── PdfUtility.Tests         ← 単体テスト
-└── PdfUtility.PreviewWeb    ← 配置確認用WebApp（後から追加）
+└── PdfUtility.PreviewApp    ← PDF座標確認ツール（WPF）
 ```
 
 ---
@@ -81,10 +72,10 @@ PdfUtility.Barcode
     ↑
     ├── PdfUtility.SampleApp
     ├── PdfUtility.Tests
-    └── PdfUtility.PreviewWeb（後から追加）
+    └── PdfUtility.PreviewApp
 ```
 
-**禁止事項：** CoreがSampleApp・PreviewWebを参照してはならない。
+**禁止事項：** CoreがSampleApp・PreviewAppを参照してはならない。
 
 ---
 
@@ -92,216 +83,37 @@ PdfUtility.Barcode
 
 ```
 PdfUtility.Core
-├── PdfUtility.cs                  ← 公開APIの中心クラス
-├── PdfUtilityFactory.cs           ← インスタンス生成
+├── PdfUtility.cs
+├── PdfUtilityFactory.cs
 ├── Documents/
-│   ├── PdfDocumentContext.cs      ← 内部保持用（開いているPDF状態）
-│   ├── PdfDocumentInfo.cs         ← PDF情報（ページ数・タイトル等）
-│   ├── PdfPageContext.cs          ← ページ内部情報
-│   └── PdfPageInfo.cs             ← ページサイズ情報
 ├── Drawing/
-│   ├── PdfDrawCommand.cs          ← 描画命令の抽象基底クラス
-│   ├── TextDrawCommand.cs         ← テキスト描画
-│   ├── RectangleDrawCommand.cs    ← 矩形描画
-│   ├── LineDrawCommand.cs         ← 線描画
-│   ├── ImageDrawCommand.cs        ← 画像埋め込み
-│   ├── BarcodeDrawCommand.cs      ← バーコード貼付
-│   ├── PdfColor.cs                ← RGB色指定
-│   ├── PdfHorizontalAlign.cs      ← 水平配置列挙
-│   ├── PdfVerticalAlign.cs        ← 垂直配置列挙
-│   └── PdfBarcodeType.cs          ← バーコード種別列挙
 ├── Services/
-│   ├── IPdfReader.cs
-│   ├── IPdfWriter.cs
-│   ├── IPdfRenderer.cs
-│   ├── IPdfMerger.cs
-│   ├── IPdfSplitter.cs
-│   ├── PdfReaderService.cs        ← 既存PDF読み込み
-│   ├── PdfWriterService.cs        ← PDF保存・追記
-│   ├── PdfRendererService.cs      ← 描画命令の適用（最重要）
-│   ├── PdfMergerService.cs
-│   └── PdfSplitterService.cs
 ├── Barcode/
-│   ├── IBarcodeGenerator.cs
-│   ├── BarcodeGenerateOptions.cs
-│   └── BarcodeGenerateResult.cs
-├── Factories/
-│   └── PdfUtilityFactory.cs
 ├── Options/
-│   └── PdfUtilityOptions.cs
 ├── Results/
-│   └── PdfProcessResult.cs
 ├── Exceptions/
-│   ├── PdfException.cs
-│   ├── PdfLoadException.cs
-│   ├── PdfRenderException.cs
-│   ├── PdfValidationException.cs
-│   └── BarcodeGenerateException.cs
 ├── Logging/
-│   ├── ILogger.cs
-│   ├── FileLogger.cs
-│   └── NullLogger.cs
 ├── Helpers/
-│   ├── FontHelper.cs              ← TTC/TTF読み込み・展開（重要）
-│   ├── PdfCoordinateHelper.cs
-│   ├── PdfValidationHelper.cs
-│   └── StreamHelper.cs
+│   ├── FontHelper.cs
+│   └── ...
 └── Constants/
-    └── PdfDefaultValues.cs
 ```
 
 ---
 
-## 6. 主要クラス設計
+## 6. FontHelper 設計（重要）
 
-### PdfUtility.cs（公開APIの中心）
+TTC・TTF両対応。メモリ上のみで処理しファイル改造禁止。
 
-```csharp
-public class PdfUtility
-{
-    public void Load(string filePath);
-    public void Load(byte[] pdfBytes);
-    public PdfDocumentInfo GetDocumentInfo();
-    public void ApplyCommand(PdfDrawCommand command);
-    public void ApplyCommands(IEnumerable<PdfDrawCommand> commands);
-    public void Save(string outputPath);
-    public byte[] SaveToBytes();
-    public byte[] Merge(IEnumerable<string> files);
-    public byte[] ExtractPages(IEnumerable<int> pageNumbers);
-    public IEnumerable<byte[]> SplitAllPages();
-}
-```
+### fsTypeによる埋め込み自動判定
 
-### PdfDrawCommand.cs（描画命令の抽象基底）
+| fsType値 | 意味 | EmbedFont |
+|---------|------|-----------|
+| 0x0000 | 埋め込み自由 | true |
+| 0x0002 | 埋め込み禁止 | false（参照のみ） |
+| 0x0008 | 編集可能な埋め込み許可 | true |
 
-```csharp
-public abstract class PdfDrawCommand
-{
-    public int PageNumber { get; set; }
-    public double X { get; set; }
-    public double Y { get; set; }
-    public int ZIndex { get; set; }
-    public string Name { get; set; }
-}
-```
-
-### TextDrawCommand.cs
-
-```csharp
-public class TextDrawCommand : PdfDrawCommand
-{
-    public string Text { get; set; }
-    public double Width { get; set; }
-    public double Height { get; set; }
-    public string FontName { get; set; }
-    public double FontSize { get; set; }
-    public PdfColor FontColor { get; set; }
-    public bool IsBold { get; set; }
-    public PdfHorizontalAlign HorizontalAlign { get; set; }
-    public PdfVerticalAlign VerticalAlign { get; set; }
-    public bool MultiLine { get; set; }
-}
-```
-
-### RectangleDrawCommand.cs
-
-```csharp
-public class RectangleDrawCommand : PdfDrawCommand
-{
-    public double Width { get; set; }
-    public double Height { get; set; }
-    public PdfColor BorderColor { get; set; }
-    public PdfColor FillColor { get; set; }
-    public double BorderWidth { get; set; }
-    public bool IsFilled { get; set; }
-}
-```
-
-### LineDrawCommand.cs
-
-```csharp
-public class LineDrawCommand : PdfDrawCommand
-{
-    public double X2 { get; set; }
-    public double Y2 { get; set; }
-    public PdfColor LineColor { get; set; }
-    public double LineWidth { get; set; }
-}
-```
-
-### ImageDrawCommand.cs
-
-```csharp
-public class ImageDrawCommand : PdfDrawCommand
-{
-    public byte[] ImageBytes { get; set; }
-    public double Width { get; set; }
-    public double Height { get; set; }
-    public bool KeepAspectRatio { get; set; }
-}
-```
-
-### PdfUtilityOptions.cs
-
-```csharp
-public class PdfUtilityOptions
-{
-    public bool EnableLogging { get; set; }
-    public string LogPath { get; set; }
-    public string DefaultFontName { get; set; }
-    public int DefaultTtcFontIndex { get; set; } = 0;
-    public bool RejectSignedPdf { get; set; }
-    public bool RejectEncryptedPdf { get; set; }
-}
-```
-
-### PdfColor.cs
-
-```csharp
-public class PdfColor
-{
-    public int R { get; set; }
-    public int G { get; set; }
-    public int B { get; set; }
-
-    public static PdfColor Black => new PdfColor { R = 0, G = 0, B = 0 };
-    public static PdfColor White => new PdfColor { R = 255, G = 255, B = 255 };
-    public static PdfColor Red   => new PdfColor { R = 255, G = 0, B = 0 };
-}
-```
-
----
-
-## 7. FontHelper 設計（重要）
-
-TTC・TTF両対応。ファイルの改造・保存は行わずメモリ上のみで処理する。
-
-```csharp
-public static class FontHelper
-{
-    // TTC・TTF両対応の入口
-    public static byte[] LoadFontBytes(string fontPath, int ttcIndex = 0)
-    {
-        string ext = Path.GetExtension(fontPath).ToLower();
-        return ext switch
-        {
-            ".ttc" => ExtractTtfFromTtc(fontPath, ttcIndex),
-            ".ttf" => File.ReadAllBytes(fontPath),
-            _ => throw new PdfException($"未対応のフォント形式: {ext}")
-        };
-    }
-
-    // TTCからTTFバイト列をメモリ展開
-    private static byte[] ExtractTtfFromTtc(string ttcPath, int fontIndex)
-    {
-        byte[] ttcData = File.ReadAllBytes(ttcPath);
-        // "ttcf" ヘッダ検証
-        // オフセット8: フォント数
-        // オフセット12 + index*4: 対象フォントのオフセット
-        // そのオフセット以降をTTFバイト列として返す
-    }
-}
-```
+Windows 11のMS明朝・MSゴシックはfsType=0x0008（埋め込み許可）に更新済み。
 
 ### 主なTTCフォントインデックス
 
@@ -312,101 +124,172 @@ public static class FontHelper
 
 ---
 
-## 8. PDF追記の技術仕様
-
-### インクリメンタルアップデートの構造
+## 7. PDF追記の技術仕様（インクリメンタルアップデート）
 
 ```
 [既存PDFバイト列 ... %%EOF]
 [追記オブジェクト群]
 xref
-（新オブジェクトのオフセット）
-trailer
-<< /Size (全オブジェクト数) /Root 1 0 R /Prev (既存xrefのオフセット) >>
+trailer << /Size N /Root 1 0 R /Prev (既存xrefオフセット) >>
 startxref
-（新xrefのオフセット）
 %%EOF
 ```
 
-### 既存PDFから取得が必要な情報
+---
 
-| 情報 | 取得方法 |
-|------|---------|
-| 最大オブジェクト番号 | 既存xrefテーブルを解析 |
-| 既存xrefのオフセット | startxrefの値を取得 |
-| Rootオブジェクト番号 | trailerの/Rootを取得 |
-| ページオブジェクト番号 | Pages → Kidsを辿る |
+## 8. PdfUtility.PreviewApp 設計（WPF）
+
+### 目的
+PDF上の座標を視覚的に確認し、描画命令のC#/VB.NETコードを自動生成するローカルツール。
+
+### 機能一覧
+
+| 優先度 | 機能 | 内容 |
+|--------|------|------|
+| 🔴 必須 | PDFファイルを開く | ダイアログで選択 |
+| 🔴 必須 | マウス座標表示 | PDF上でリアルタイムX・Y表示 |
+| 🔴 必須 | クリックで座標取得 | クリックした座標を右パネルに表示 |
+| 🔴 必須 | コード生成 | C# / VB.NET 切り替え対応 |
+| 🔴 必須 | コードコピー | クリップボードにコピー |
+| 🔴 必須 | グリッド表示 | ON/OFF切り替え |
+| 🟡 推奨 | ページ切り替え | 複数ページ対応 |
+| 🟡 推奨 | 範囲選択 | ドラッグでWidth・Height取得 |
+
+### 画面レイアウト
+
+```
+┌─────────────────────────────────────────┐
+│ PdfUtility 座標確認ツール                 │
+│ [PDFを開く] [グリッド ON/OFF] [◀ 1/3 ▶] │
+├────────────────────────┬────────────────┤
+│                        │ 座標情報        │
+│                        │ X :  142.5 pt  │
+│                        │ Y :  380.2 pt  │
+│   PDFビューア           │ Page :  1      │
+│                        │────────────────│
+│   ← マウスで操作        │ 選択範囲        │
+│   ← ドラッグで範囲選択  │ W :  200.0 pt  │
+│                        │ H :   50.0 pt  │
+│                        │────────────────│
+│                        │ 生成コード      │
+│                        │ 言語:[C#][VB]  │
+│                        │ ┌────────────┐ │
+│                        │ │コード表示   │ │
+│                        │ └────────────┘ │
+│                        │ [コードをコピー]│
+└────────────────────────┴────────────────┘
+```
+
+### フォルダ構成
+
+```
+PdfUtility.PreviewApp
+├── App.xaml / App.xaml.cs
+├── MainWindow.xaml / MainWindow.xaml.cs
+├── ViewModels/
+│   └── MainViewModel.cs        ← MVVM ViewModel
+├── Services/
+│   ├── PdfRenderService.cs     ← PDF→画像変換
+│   └── CodeGeneratorService.cs ← C#/VB.NETコード生成
+├── Models/
+│   ├── CoordinateInfo.cs       ← 座標情報
+│   └── CodeLanguage.cs         ← 言語選択列挙
+└── Helpers/
+    └── PdfCoordinateConverter.cs ← 画面座標↔PDF座標変換
+```
+
+### コード生成サービス設計
+
+```csharp
+public enum CodeLanguage { CSharp, VbNet }
+
+public class CodeGeneratorService
+{
+    public string Generate(CoordinateInfo info, CodeLanguage language)
+    {
+        return language switch
+        {
+            CodeLanguage.CSharp => GenerateCSharp(info),
+            CodeLanguage.VbNet  => GenerateVbNet(info),
+            _ => ""
+        };
+    }
+}
+```
+
+### 生成コードサンプル（クリック時）
+
+**C#**
+```csharp
+new TextDrawCommand
+{
+    PageNumber = 1,
+    X = 142.5,
+    Y = 380.2,
+    FontName = "MS明朝",
+    FontSize = 10,
+    FontColor = PdfColor.Black,
+    HorizontalAlign = PdfHorizontalAlign.Left
+};
+```
+
+**VB.NET**
+```vb
+New TextDrawCommand With {
+    .PageNumber = 1,
+    .X = 142.5,
+    .Y = 380.2,
+    .FontName = "MS明朝",
+    .FontSize = 10,
+    .FontColor = PdfColor.Black,
+    .HorizontalAlign = PdfHorizontalAlign.Left
+}
+```
+
+### PDF表示方式
+- PDFをページ単位で画像（PNG）に変換してWPFのImageコントロールに表示
+- PDF→画像変換にはWindows標準の `Windows.Data.Pdf` を使用（追加ライセンス不要）
+
+### 座標変換の仕組み
+
+```
+画面座標（ピクセル・左上原点）
+    ↓ PdfCoordinateConverter
+PDF座標（ポイント・左下原点）
+
+変換式：
+pdfX = screenX / scaleX
+pdfY = pageHeight - (screenY / scaleY)
+```
 
 ---
 
 ## 9. 実装フェーズ
 
-### Phase 1：PDF追記の骨格（最初に実装）
-- 既存PDFのバイト列読み込み
-- インクリメンタルアップデート形式での末尾追記
-- 空コンテンツでも追記してファイルが開けることを確認
+| フェーズ | 内容 | 状態 |
+|---------|------|------|
+| Phase 1 | PDF追記の骨格 | ✅ 完了 |
+| Phase 2 | 図形・枠描画 | ✅ 完了 |
+| Phase 3 | 画像埋め込み | ✅ 完了 |
+| Phase 4 | FontEngine | ✅ 完了 |
+| Phase 5 | テキスト描画 | ✅ 完了 |
+| Phase 6 | PreviewApp（WPF） | 🔄 進行中 |
 
-### Phase 2：図形・枠描画
-- 矩形（RectangleDrawCommand）
-- 線（LineDrawCommand）
-
-### Phase 3：画像埋め込み
-- JPEG画像のバイト埋め込み（ImageDrawCommand）
-
-### Phase 4：FontEngine
-- TTC/TTFのメモリ展開
-- フォントテーブル解析（cmap・hmtx）
-
-### Phase 5：テキスト描画
-- 日本語テキストのグリフ埋め込み（TextDrawCommand）
-
----
-
-## 10. 利用イメージ
-
-```csharp
-var options = new PdfUtilityOptions
-{
-    EnableLogging = true,
-    DefaultFontName = "MS明朝"
-};
-
-var pdf = PdfUtilityFactory.Create(options);
-pdf.Load("input.pdf");
-
-var commands = new List<PdfDrawCommand>
-{
-    new TextDrawCommand
-    {
-        PageNumber = 1,
-        X = 100, Y = 120,
-        Text = "テスト出力",
-        FontName = "MS明朝",
-        FontSize = 10,
-        FontColor = PdfColor.Black,
-        HorizontalAlign = PdfHorizontalAlign.Left
-    },
-    new RectangleDrawCommand
-    {
-        PageNumber = 1,
-        X = 50, Y = 50,
-        Width = 200, Height = 100,
-        BorderColor = PdfColor.Black,
-        BorderWidth = 1.0,
-        IsFilled = false
-    }
-};
-
-pdf.ApplyCommands(commands);
-pdf.Save("output.pdf");
-```
+### Phase 6 実装ステップ
+- Step 1：WPFプロジェクト作成・基本レイアウト
+- Step 2：PDFファイルを開いて表示
+- Step 3：マウス座標のリアルタイム表示
+- Step 4：グリッド表示ON/OFF
+- Step 5：クリックで座標取得・コード生成
+- Step 6：C#/VB.NET切り替え対応
+- Step 7：ドラッグによる範囲選択
 
 ---
 
-## 11. v1で見送る機能
+## 10. v1で見送る機能
 
 - 電子署名対応
 - 暗号化PDFの編集
 - 縦書き対応
 - 全バーコード規格対応
-- ブラウザ上でのPDF直接編集
+- Web上でのPDF座標確認ツール公開

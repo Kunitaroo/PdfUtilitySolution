@@ -9,3 +9,4 @@ D:\workspace\PdfUtilitySolution\PdfUtilitySolution\obj\Debug\net8.0\PdfUtilitySo
 D:\workspace\PdfUtilitySolution\PdfUtilitySolution\obj\Debug\net8.0\refint\PdfUtilitySolution.dll
 D:\workspace\PdfUtilitySolution\PdfUtilitySolution\obj\Debug\net8.0\PdfUtilitySolution.pdb
 D:\workspace\PdfUtilitySolution\PdfUtilitySolution\obj\Debug\net8.0\ref\PdfUtilitySolution.dll
+D:\workspace\PdfUtilitySolution\PdfUtilitySolution\obj\Debug\net8.0\PdfUtilitySolution.sourcelink.json

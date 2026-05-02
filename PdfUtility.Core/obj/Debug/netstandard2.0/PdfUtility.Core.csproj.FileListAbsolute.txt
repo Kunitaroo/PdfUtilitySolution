@@ -8,3 +8,4 @@ D:\workspace\PdfUtilitySolution\PdfUtility.Core\bin\Debug\netstandard2.0\PdfUtil
 D:\workspace\PdfUtilitySolution\PdfUtility.Core\bin\Debug\netstandard2.0\PdfUtility.Core.pdb
 D:\workspace\PdfUtilitySolution\PdfUtility.Core\obj\Debug\netstandard2.0\PdfUtility.Core.dll
 D:\workspace\PdfUtilitySolution\PdfUtility.Core\obj\Debug\netstandard2.0\PdfUtility.Core.pdb
+D:\workspace\PdfUtilitySolution\PdfUtility.Core\obj\Debug\netstandard2.0\PdfUtility.Core.sourcelink.json

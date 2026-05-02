@@ -1,0 +1,468 @@
+<Window x:Class="PdfUtility.PreviewApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:PdfUtility.PreviewApp.ViewModels"
+        Title="PdfUtility 座標確認ツール"
+        Width="1120" Height="780"
+        MinWidth="800" MinHeight="600"
+        Background="#E8ECF0">
+
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <!-- ツールバーボタン -->
+        <Style x:Key="TbButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#4D7EA8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="14,5"/>
+            <Setter Property="Margin" Value="3,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2D5F8E"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#1A4070"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.35"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- グリッドトグルボタン -->
+        <Style x:Key="TbToggleStyle" TargetType="ToggleButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#4D7EA8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="14,5"/>
+            <Setter Property="Margin" Value="3,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#2B6CB0"/>
+                                <Setter TargetName="bd" Property="BorderBrush" Value="#63B3ED"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#2D5F8E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 右パネル カードスタイル -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#CBD5E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <!-- セクションヘッダー -->
+        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#2B4C7E"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+
+        <!-- ラベル -->
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#718096"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="48"/>
+        </Style>
+
+        <!-- 数値表示 -->
+        <Style x:Key="ValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="Foreground" Value="#2D3748"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- アクションボタン -->
+        <Style x:Key="ActionButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#2B6CB0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,7"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2C5282"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#1A365D"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 言語切り替えラジオボタン -->
+        <Style x:Key="LangRadioStyle" TargetType="RadioButton">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#2D3748"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="bd"
+                                Background="#EDF2F7"
+                                BorderBrush="#CBD5E0"
+                                BorderThickness="1"
+                                CornerRadius="3"
+                                Padding="10,4"
+                                Cursor="Hand">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#2B6CB0"/>
+                                <Setter TargetName="bd" Property="BorderBrush" Value="#2B6CB0"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#BEE3F8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ツールバー -->
+        <Border Grid.Row="0" Background="#1E3A5F" Padding="14,9">
+            <DockPanel LastChildFill="True">
+
+                <!-- タイトル -->
+                <TextBlock DockPanel.Dock="Left"
+                           Text="PdfUtility 座標確認ツール"
+                           Foreground="White"
+                           FontSize="15"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           Margin="0,0,24,0"/>
+
+                <!-- ステータス（右寄せ） -->
+                <TextBlock DockPanel.Dock="Right"
+                           Text="{Binding StatusMessage}"
+                           Foreground="#90B8D8"
+                           FontSize="12"
+                           VerticalAlignment="Center"/>
+
+                <!-- ツール群 -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+
+                    <Button Content="PDF を開く"
+                            Style="{StaticResource TbButtonStyle}"
+                            Command="{Binding OpenPdfCommand}"/>
+
+                    <Rectangle Width="1" Fill="#4D7EA8" Margin="8,4"/>
+
+                    <ToggleButton Content="グリッド"
+                                  Style="{StaticResource TbToggleStyle}"
+                                  IsChecked="{Binding IsGridVisible}"/>
+
+                    <Rectangle Width="1" Fill="#4D7EA8" Margin="8,4"/>
+
+                    <!-- ページ移動 -->
+                    <Button Content="◀"
+                            Style="{StaticResource TbButtonStyle}"
+                            Command="{Binding PrevPageCommand}"
+                            Width="34" Padding="0,5"/>
+                    <TextBlock Text="{Binding PageInfo}"
+                               Foreground="White"
+                               FontSize="13"
+                               VerticalAlignment="Center"
+                               Margin="8,0"
+                               MinWidth="64"
+                               TextAlignment="Center"/>
+                    <Button Content="▶"
+                            Style="{StaticResource TbButtonStyle}"
+                            Command="{Binding NextPageCommand}"
+                            Width="34" Padding="0,5"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- メインコンテンツ -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="270"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- ===== 左：PDF ビューア ===== -->
+            <Border Grid.Column="0" Background="#D8DFE8">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto"
+                              Background="#D8DFE8">
+                    <Grid HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Margin="24">
+
+                        <!-- PDF ページ本体（影付き） -->
+                        <Border BorderBrush="#AABBD0" BorderThickness="1"
+                                Background="White">
+                            <Border.Effect>
+                                <DropShadowEffect ShadowDepth="4" BlurRadius="8" Opacity="0.3" Color="#888888"/>
+                            </Border.Effect>
+                            <Grid x:Name="PdfContainer">
+
+                                <!-- PDF 画像 -->
+                                <Image x:Name="PdfImage"
+                                       Source="{Binding PdfPageImage}"
+                                       Stretch="None"
+                                       Cursor="Cross"
+                                       MouseMove="PdfImage_MouseMove"
+                                       MouseLeftButtonDown="PdfImage_MouseLeftButtonDown"
+                                       MouseLeftButtonUp="PdfImage_MouseLeftButtonUp"/>
+
+                                <!-- PDF 未読み込みプレースホルダー -->
+                                <Border Visibility="{Binding NoPdfVisibility}"
+                                        Width="595" Height="842"
+                                        Background="#F7FAFC">
+                                    <StackPanel HorizontalAlignment="Center"
+                                                VerticalAlignment="Center">
+                                        <TextBlock Text="PDF"
+                                                   FontSize="52"
+                                                   FontWeight="Thin"
+                                                   Foreground="#BDD0E0"
+                                                   HorizontalAlignment="Center"/>
+                                        <TextBlock Text="「PDF を開く」でファイルを選択してください"
+                                                   FontSize="13"
+                                                   Foreground="#90A4AE"
+                                                   HorizontalAlignment="Center"
+                                                   Margin="0,14,0,0"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- グリッドオーバーレイ（ヒットテスト無効） -->
+                                <Canvas x:Name="GridOverlay"
+                                        IsHitTestVisible="False"
+                                        ClipToBounds="True"
+                                        Visibility="{Binding IsGridVisible, Converter={StaticResource BoolToVis}}"/>
+
+                                <!-- 選択範囲オーバーレイ（最前面、ヒットテスト無効） -->
+                                <Canvas x:Name="SelectionCanvas"
+                                        IsHitTestVisible="False"
+                                        ClipToBounds="True"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </ScrollViewer>
+            </Border>
+
+            <!-- スプリッター -->
+            <GridSplitter Grid.Column="1"
+                          Width="5"
+                          Background="#C8D4E0"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          ResizeDirection="Columns"/>
+
+            <!-- ===== 右：情報パネル ===== -->
+            <Border Grid.Column="2"
+                    Background="#F0F4F8"
+                    BorderBrush="#C8D4E0"
+                    BorderThickness="1,0,0,0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="12,14,12,14">
+
+                        <!-- 座標情報 -->
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Text="座 標 情 報" Style="{StaticResource SectionHeaderStyle}"/>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="26"/>
+                                        <RowDefinition Height="26"/>
+                                        <RowDefinition Height="26"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="48"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="X :" Style="{StaticResource LabelStyle}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1"
+                                               Text="{Binding ClickedX, StringFormat={}{0:F1} pt}"
+                                               Style="{StaticResource ValueStyle}"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Y :" Style="{StaticResource LabelStyle}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1"
+                                               Text="{Binding ClickedY, StringFormat={}{0:F1} pt}"
+                                               Style="{StaticResource ValueStyle}"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Page :" Style="{StaticResource LabelStyle}"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1"
+                                               Text="{Binding CurrentPage}"
+                                               Style="{StaticResource ValueStyle}"/>
+                                </Grid>
+                                <!-- リアルタイムマウス位置 -->
+                                <Separator Margin="0,6,0,4" Background="#E2E8F0"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="マウス : "
+                                               FontSize="11"
+                                               Foreground="#A0AEC0"
+                                               VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding MouseX, StringFormat={}{0:F1}}"
+                                               FontSize="11" FontFamily="Consolas"
+                                               Foreground="#A0AEC0"/>
+                                    <TextBlock Text=",  "
+                                               FontSize="11"
+                                               Foreground="#A0AEC0"/>
+                                    <TextBlock Text="{Binding MouseY, StringFormat={}{0:F1}}"
+                                               FontSize="11" FontFamily="Consolas"
+                                               Foreground="#A0AEC0"/>
+                                    <TextBlock Text=" pt"
+                                               FontSize="11"
+                                               Foreground="#A0AEC0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 選択範囲 -->
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Text="選 択 範 囲" Style="{StaticResource SectionHeaderStyle}"/>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="26"/>
+                                        <RowDefinition Height="26"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="48"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="W :" Style="{StaticResource LabelStyle}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1"
+                                               Text="{Binding SelectionWidth, StringFormat={}{0:F1} pt}"
+                                               Style="{StaticResource ValueStyle}"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="H :" Style="{StaticResource LabelStyle}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1"
+                                               Text="{Binding SelectionHeight, StringFormat={}{0:F1} pt}"
+                                               Style="{StaticResource ValueStyle}"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 生成コード -->
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Text="生 成 コ ー ド" Style="{StaticResource SectionHeaderStyle}"/>
+
+                                <!-- 言語切り替え -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="言語 : "
+                                               Style="{StaticResource LabelStyle}"
+                                               Width="Auto"
+                                               Margin="0,0,8,0"/>
+                                    <RadioButton Content="C#"
+                                                 GroupName="Lang"
+                                                 Style="{StaticResource LangRadioStyle}"
+                                                 IsChecked="{Binding IsCSharpSelected}"
+                                                 Margin="0,0,4,0"/>
+                                    <RadioButton Content="VB.NET"
+                                                 GroupName="Lang"
+                                                 Style="{StaticResource LangRadioStyle}"
+                                                 IsChecked="{Binding IsVbNetSelected}"/>
+                                </StackPanel>
+
+                                <!-- コード表示エリア -->
+                                <Border BorderBrush="#CBD5E0"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Background="#F7FAFC">
+                                    <TextBox Text="{Binding GeneratedCode, Mode=OneWay}"
+                                             IsReadOnly="True"
+                                             FontFamily="Consolas"
+                                             FontSize="11"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             Padding="8,6"
+                                             MinHeight="130"
+                                             MaxHeight="240"
+                                             TextWrapping="NoWrap"
+                                             VerticalScrollBarVisibility="Auto"
+                                             HorizontalScrollBarVisibility="Auto"
+                                             AcceptsReturn="True"
+                                             Foreground="#2D3748"/>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- コピーボタン -->
+                        <Button Content="コードをコピー"
+                                Style="{StaticResource ActionButtonStyle}"
+                                Command="{Binding CopyCodeCommand}"
+                                HorizontalAlignment="Stretch"/>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
