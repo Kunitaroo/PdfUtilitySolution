@@ -119,7 +119,7 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
-        <!-- アクションボタン -->
+        <!-- アクションボタン（青） -->
         <Style x:Key="ActionButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#2B6CB0"/>
             <Setter Property="Foreground" Value="White"/>
@@ -141,6 +141,38 @@
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter Property="Background" Value="#1A365D"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 危険ボタン（赤） -->
+        <Style x:Key="DangerButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#E53E3E"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,7"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#C53030"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#9B2C2C"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.4"/>
@@ -181,6 +213,16 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- 入力TextBox -->
+        <Style x:Key="InputBoxStyle" TargetType="TextBox">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="4,3"/>
+            <Setter Property="BorderBrush" Value="#CBD5E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -193,7 +235,6 @@
         <Border Grid.Row="0" Background="#1E3A5F" Padding="14,9">
             <DockPanel LastChildFill="True">
 
-                <!-- タイトル -->
                 <TextBlock DockPanel.Dock="Left"
                            Text="PdfUtility 座標確認ツール"
                            Foreground="White"
@@ -202,14 +243,12 @@
                            VerticalAlignment="Center"
                            Margin="0,0,24,0"/>
 
-                <!-- ステータス（右寄せ） -->
                 <TextBlock DockPanel.Dock="Right"
                            Text="{Binding StatusMessage}"
                            Foreground="#90B8D8"
                            FontSize="12"
                            VerticalAlignment="Center"/>
 
-                <!-- ツール群 -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 
                     <Button Content="PDF を開く"
@@ -224,7 +263,6 @@
 
                     <Rectangle Width="1" Fill="#4D7EA8" Margin="8,4"/>
 
-                    <!-- ページ移動 -->
                     <Button Content="◀"
                             Style="{StaticResource TbButtonStyle}"
                             Command="{Binding PrevPageCommand}"
@@ -249,7 +287,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="270"/>
+                <ColumnDefinition Width="280"/>
             </Grid.ColumnDefinitions>
 
             <!-- ===== 左：PDF ビューア ===== -->
@@ -302,6 +340,11 @@
                                         IsHitTestVisible="False"
                                         ClipToBounds="True"
                                         Visibility="{Binding IsGridVisible, Converter={StaticResource BoolToVis}}"/>
+
+                                <!-- プレビューオーバーレイ（ヒットテスト無効） -->
+                                <Canvas x:Name="PreviewCanvas"
+                                        IsHitTestVisible="False"
+                                        ClipToBounds="True"/>
 
                                 <!-- 選択範囲オーバーレイ（最前面、ヒットテスト無効） -->
                                 <Canvas x:Name="SelectionCanvas"
@@ -359,7 +402,6 @@
                                                Text="{Binding CurrentPage}"
                                                Style="{StaticResource ValueStyle}"/>
                                 </Grid>
-                                <!-- リアルタイムマウス位置 -->
                                 <Separator Margin="0,6,0,4" Background="#E2E8F0"/>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="マウス : "
@@ -414,7 +456,6 @@
                             <StackPanel>
                                 <TextBlock Text="生 成 コ ー ド" Style="{StaticResource SectionHeaderStyle}"/>
 
-                                <!-- 言語切り替え -->
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                     <TextBlock Text="言語 : "
                                                Style="{StaticResource LabelStyle}"
@@ -431,7 +472,6 @@
                                                  IsChecked="{Binding IsVbNetSelected}"/>
                                 </StackPanel>
 
-                                <!-- コード表示エリア -->
                                 <Border BorderBrush="#CBD5E0"
                                         BorderThickness="1"
                                         CornerRadius="4"
@@ -458,7 +498,163 @@
                         <Button Content="コードをコピー"
                                 Style="{StaticResource ActionButtonStyle}"
                                 Command="{Binding CopyCodeCommand}"
-                                HorizontalAlignment="Stretch"/>
+                                HorizontalAlignment="Stretch"
+                                Margin="0,0,0,16"/>
+
+                        <!-- ======= プレビュー追加セクション ======= -->
+                        <Rectangle Height="1" Fill="#CBD5E0" Margin="0,0,0,14"/>
+
+                        <!-- プレビュー追加 カード -->
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Text="プ レ ビ ュ ー 追 加" Style="{StaticResource SectionHeaderStyle}"/>
+
+                                <!-- タイプ選択 -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <RadioButton Content="テキスト"
+                                                 GroupName="PreviewType"
+                                                 Style="{StaticResource LangRadioStyle}"
+                                                 IsChecked="{Binding IsTextMode}"
+                                                 Margin="0,0,4,0"/>
+                                    <RadioButton Content="枠"
+                                                 GroupName="PreviewType"
+                                                 Style="{StaticResource LangRadioStyle}"
+                                                 IsChecked="{Binding IsRectMode}"
+                                                 Margin="0,0,4,0"/>
+                                    <RadioButton Content="画像"
+                                                 GroupName="PreviewType"
+                                                 Style="{StaticResource LangRadioStyle}"
+                                                 IsChecked="{Binding IsImageMode}"/>
+                                </StackPanel>
+
+                                <!-- テキスト内容（テキストモードのみ） -->
+                                <Grid Margin="0,0,0,6"
+                                      Visibility="{Binding IsTextMode, Converter={StaticResource BoolToVis}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="44"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="内容 :"
+                                               FontSize="11" Foreground="#718096"
+                                               VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1"
+                                             Text="{Binding PreviewText, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource InputBoxStyle}"/>
+                                </Grid>
+
+                                <!-- フォントサイズ（テキストモードのみ） -->
+                                <Grid Margin="0,0,0,6"
+                                      Visibility="{Binding IsTextMode, Converter={StaticResource BoolToVis}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="44"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Fサイズ:"
+                                               FontSize="11" Foreground="#718096"
+                                               VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1"
+                                             Text="{Binding PreviewFontSize, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource InputBoxStyle}"/>
+                                </Grid>
+
+                                <!-- 画像選択（画像モードのみ） -->
+                                <StackPanel Margin="0,0,0,6"
+                                            Visibility="{Binding IsImageMode, Converter={StaticResource BoolToVis}}">
+                                    <Button Content="画像ファイルを選択..."
+                                            Style="{StaticResource ActionButtonStyle}"
+                                            Command="{Binding SelectImageCommand}"
+                                            HorizontalAlignment="Left"
+                                            Padding="10,5"/>
+                                    <TextBlock Text="{Binding PreviewImageFileName}"
+                                               FontSize="10"
+                                               Foreground="#718096"
+                                               Margin="2,4,0,0"
+                                               TextTrimming="CharacterEllipsis"
+                                               Visibility="{Binding HasPreviewImage, Converter={StaticResource BoolToVis}}"/>
+                                </StackPanel>
+
+                                <!-- W / H（枠・画像モード） -->
+                                <Grid Margin="0,0,0,6"
+                                      Visibility="{Binding IsRectOrImageMode, Converter={StaticResource BoolToVis}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="8"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="W :"
+                                               FontSize="11" Foreground="#718096"
+                                               VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                    <TextBox Grid.Column="1"
+                                             Text="{Binding PreviewWidth, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource InputBoxStyle}"/>
+                                    <TextBlock Grid.Column="3" Text="H :"
+                                               FontSize="11" Foreground="#718096"
+                                               VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                    <TextBox Grid.Column="4"
+                                             Text="{Binding PreviewHeight, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource InputBoxStyle}"/>
+                                </Grid>
+
+                                <!-- X / Y（共通） -->
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="8"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="X :"
+                                               FontSize="11" Foreground="#718096"
+                                               VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                    <TextBox Grid.Column="1"
+                                             Text="{Binding PreviewX, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource InputBoxStyle}"/>
+                                    <TextBlock Grid.Column="3" Text="Y :"
+                                               FontSize="11" Foreground="#718096"
+                                               VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                    <TextBox Grid.Column="4"
+                                             Text="{Binding PreviewY, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource InputBoxStyle}"/>
+                                </Grid>
+
+                                <!-- 追加ボタン -->
+                                <Button Content="プレビューに追加"
+                                        Style="{StaticResource ActionButtonStyle}"
+                                        Command="{Binding AddPreviewCommand}"
+                                        HorizontalAlignment="Stretch"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- プレビュー一覧 カード -->
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Text="プ レ ビ ュ ー 一 覧" Style="{StaticResource SectionHeaderStyle}"/>
+
+                                <ListBox ItemsSource="{Binding PreviewElements}"
+                                         SelectedItem="{Binding SelectedPreviewElement}"
+                                         DisplayMemberPath="DisplayName"
+                                         MaxHeight="160"
+                                         BorderBrush="#CBD5E0"
+                                         BorderThickness="1"
+                                         FontFamily="Consolas"
+                                         FontSize="11"
+                                         Margin="0,0,0,8"
+                                         Background="White"/>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="選択を削除"
+                                            Style="{StaticResource ActionButtonStyle}"
+                                            Command="{Binding DeletePreviewCommand}"
+                                            Margin="0,0,8,0"/>
+                                    <Button Content="全てクリア"
+                                            Style="{StaticResource DangerButtonStyle}"
+                                            Command="{Binding ClearPreviewCommand}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
 
                     </StackPanel>
                 </ScrollViewer>

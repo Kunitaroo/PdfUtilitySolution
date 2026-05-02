@@ -2,6 +2,7 @@ using Microsoft.Win32;
 using PdfUtility.PreviewApp.Helpers;
 using PdfUtility.PreviewApp.Models;
 using PdfUtility.PreviewApp.Services;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
@@ -13,10 +14,10 @@ public class MainViewModel : ViewModelBase
     private readonly CodeGeneratorService _codeService = new();
     private readonly PdfCoordinateConverter _converter = new();
 
+    // ===== 既存フィールド =====
     private BitmapSource? _pdfPageImage;
     private int _currentPage = 1;
     private int _totalPages;
-    // グリッド描画用：ページの表示サイズ（WPF論理px）とPDFサイズ（ポイント）
     public double PageDisplayWidth  { get; private set; }
     public double PageDisplayHeight { get; private set; }
     public double PagePointWidth    { get; private set; }
@@ -32,6 +33,21 @@ public class MainViewModel : ViewModelBase
     private bool _isCSharpSelected = true;
     private string _statusMessage = "「PDF を開く」でファイルを選択してください";
     private CoordinateInfo _lastCoordinate = new();
+
+    // ===== プレビューフィールド =====
+    private PreviewElementType _previewType = PreviewElementType.Text;
+    private string _previewText = "サンプルテキスト";
+    private double _previewX = 100;
+    private double _previewY = 700;
+    private double _previewWidth = 100;
+    private double _previewHeight = 50;
+    private double _previewFontSize = 12;
+    private string _previewImagePath = string.Empty;
+    private PreviewElement? _selectedPreviewElement;
+
+    // ===== 既存プロパティ =====
+
+    public PdfCoordinateConverter Converter => _converter;
 
     public BitmapSource? PdfPageImage
     {
@@ -132,18 +148,126 @@ public class MainViewModel : ViewModelBase
 
     public Visibility NoPdfVisibility => PdfPageImage == null ? Visibility.Visible : Visibility.Collapsed;
 
-    public AsyncRelayCommand OpenPdfCommand { get; }
-    public AsyncRelayCommand PrevPageCommand { get; }
-    public AsyncRelayCommand NextPageCommand { get; }
-    public RelayCommand CopyCodeCommand { get; }
+    // ===== プレビュープロパティ =====
+
+    public ObservableCollection<PreviewElement> PreviewElements { get; } = new();
+
+    public PreviewElement? SelectedPreviewElement
+    {
+        get => _selectedPreviewElement;
+        set
+        {
+            if (SetField(ref _selectedPreviewElement, value))
+                DeletePreviewCommand?.RaiseCanExecuteChanged();
+        }
+    }
+
+    public bool IsTextMode
+    {
+        get => _previewType == PreviewElementType.Text;
+        set { if (value) SetPreviewType(PreviewElementType.Text); }
+    }
+
+    public bool IsRectMode
+    {
+        get => _previewType == PreviewElementType.Rectangle;
+        set { if (value) SetPreviewType(PreviewElementType.Rectangle); }
+    }
+
+    public bool IsImageMode
+    {
+        get => _previewType == PreviewElementType.Image;
+        set { if (value) SetPreviewType(PreviewElementType.Image); }
+    }
+
+    public bool IsRectOrImageMode => _previewType != PreviewElementType.Text;
+
+    private void SetPreviewType(PreviewElementType type)
+    {
+        _previewType = type;
+        OnPropertyChanged(nameof(IsTextMode));
+        OnPropertyChanged(nameof(IsRectMode));
+        OnPropertyChanged(nameof(IsImageMode));
+        OnPropertyChanged(nameof(IsRectOrImageMode));
+    }
+
+    public string PreviewText
+    {
+        get => _previewText;
+        set => SetField(ref _previewText, value);
+    }
+
+    public double PreviewX
+    {
+        get => _previewX;
+        set => SetField(ref _previewX, value);
+    }
+
+    public double PreviewY
+    {
+        get => _previewY;
+        set => SetField(ref _previewY, value);
+    }
+
+    public double PreviewWidth
+    {
+        get => _previewWidth;
+        set => SetField(ref _previewWidth, value);
+    }
+
+    public double PreviewHeight
+    {
+        get => _previewHeight;
+        set => SetField(ref _previewHeight, value);
+    }
+
+    public double PreviewFontSize
+    {
+        get => _previewFontSize;
+        set => SetField(ref _previewFontSize, value);
+    }
+
+    public string PreviewImagePath
+    {
+        get => _previewImagePath;
+        private set
+        {
+            SetField(ref _previewImagePath, value);
+            OnPropertyChanged(nameof(PreviewImageFileName));
+            OnPropertyChanged(nameof(HasPreviewImage));
+        }
+    }
+
+    public string PreviewImageFileName => string.IsNullOrEmpty(_previewImagePath)
+        ? ""
+        : System.IO.Path.GetFileName(_previewImagePath);
+
+    public bool HasPreviewImage => !string.IsNullOrEmpty(_previewImagePath);
+
+    // ===== コマンド =====
+
+    public AsyncRelayCommand OpenPdfCommand   { get; }
+    public AsyncRelayCommand PrevPageCommand  { get; }
+    public AsyncRelayCommand NextPageCommand  { get; }
+    public RelayCommand      CopyCodeCommand  { get; }
+    public RelayCommand      AddPreviewCommand    { get; }
+    public RelayCommand      DeletePreviewCommand { get; }
+    public RelayCommand      ClearPreviewCommand  { get; }
+    public RelayCommand      SelectImageCommand   { get; }
 
     public MainViewModel()
     {
-        OpenPdfCommand = new AsyncRelayCommand(OpenPdfAsync);
-        PrevPageCommand = new AsyncRelayCommand(PrevPageAsync, () => CurrentPage > 1);
-        NextPageCommand = new AsyncRelayCommand(NextPageAsync, () => CurrentPage < TotalPages);
-        CopyCodeCommand = new RelayCommand(CopyCode, () => !string.IsNullOrEmpty(GeneratedCode));
+        OpenPdfCommand   = new AsyncRelayCommand(OpenPdfAsync);
+        PrevPageCommand  = new AsyncRelayCommand(PrevPageAsync, () => CurrentPage > 1);
+        NextPageCommand  = new AsyncRelayCommand(NextPageAsync, () => CurrentPage < TotalPages);
+        CopyCodeCommand  = new RelayCommand(CopyCode, () => !string.IsNullOrEmpty(GeneratedCode));
+        AddPreviewCommand    = new RelayCommand(AddPreview, () => _converter.IsInitialized);
+        DeletePreviewCommand = new RelayCommand(DeletePreview, () => SelectedPreviewElement != null);
+        ClearPreviewCommand  = new RelayCommand(ClearPreview, () => PreviewElements.Count > 0);
+        SelectImageCommand   = new RelayCommand(SelectImage);
     }
+
+    // ===== 既存メソッド =====
 
     private async Task OpenPdfAsync()
     {
@@ -159,7 +283,7 @@ public class MainViewModel : ViewModelBase
         try
         {
             await _pdfService.OpenAsync(dlg.FileName);
-            TotalPages = (int)_pdfService.PageCount;
+            TotalPages  = (int)_pdfService.PageCount;
             CurrentPage = 1;
             await LoadCurrentPageAsync();
             StatusMessage = $"読み込み完了  ({TotalPages} ページ)";
@@ -173,13 +297,13 @@ public class MainViewModel : ViewModelBase
 
         PrevPageCommand.RaiseCanExecuteChanged();
         NextPageCommand.RaiseCanExecuteChanged();
+        AddPreviewCommand.RaiseCanExecuteChanged();
     }
 
     private async Task LoadCurrentPageAsync()
     {
         var bmp = await _pdfService.RenderPageAsync((uint)(CurrentPage - 1));
 
-        // bmp.Width は WPF 論理px（DPI補正済み）。GetPosition() と同じ座標系。
         PageDisplayWidth  = bmp.Width;
         PageDisplayHeight = bmp.Height;
         PagePointWidth    = _pdfService.CurrentPagePointWidth;
@@ -187,7 +311,7 @@ public class MainViewModel : ViewModelBase
 
         _converter.Update(bmp.Width, bmp.Height, PagePointWidth, PagePointHeight);
 
-        PdfPageImage = bmp; // 最後に設定してグリッド再描画イベントを1回だけ発火
+        PdfPageImage = bmp;
     }
 
     private async Task PrevPageAsync()
@@ -223,7 +347,7 @@ public class MainViewModel : ViewModelBase
         ClickedX = x;
         ClickedY = y;
         _lastCoordinate = new CoordinateInfo { X = x, Y = y, PageNumber = CurrentPage };
-        SelectionWidth = 0;
+        SelectionWidth  = 0;
         SelectionHeight = 0;
         RegenerateCode();
         CopyCodeCommand.RaiseCanExecuteChanged();
@@ -238,8 +362,8 @@ public class MainViewModel : ViewModelBase
         ClickedY = Math.Max(y1, y2);
         _lastCoordinate = new CoordinateInfo
         {
-            X = Math.Min(x1, x2),
-            Y = Math.Max(y1, y2),
+            X      = Math.Min(x1, x2),
+            Y      = Math.Max(y1, y2),
             PageNumber = CurrentPage,
             Width  = Math.Abs(x2 - x1),
             Height = Math.Abs(y2 - y1),
@@ -260,5 +384,50 @@ public class MainViewModel : ViewModelBase
     {
         if (!string.IsNullOrEmpty(GeneratedCode))
             Clipboard.SetText(GeneratedCode);
+    }
+
+    // ===== プレビューメソッド =====
+
+    private void AddPreview()
+    {
+        var element = new PreviewElement
+        {
+            Type      = _previewType,
+            X         = PreviewX,
+            Y         = PreviewY,
+            Width     = PreviewWidth,
+            Height    = PreviewHeight,
+            Text      = PreviewText,
+            FontSize  = PreviewFontSize,
+            ImagePath = _previewType == PreviewElementType.Image ? PreviewImagePath : null,
+        };
+        PreviewElements.Add(element);
+        ClearPreviewCommand.RaiseCanExecuteChanged();
+    }
+
+    private void DeletePreview()
+    {
+        if (SelectedPreviewElement == null) return;
+        PreviewElements.Remove(SelectedPreviewElement);
+        SelectedPreviewElement = null;
+        DeletePreviewCommand.RaiseCanExecuteChanged();
+        ClearPreviewCommand.RaiseCanExecuteChanged();
+    }
+
+    private void ClearPreview()
+    {
+        PreviewElements.Clear();
+        ClearPreviewCommand.RaiseCanExecuteChanged();
+    }
+
+    private void SelectImage()
+    {
+        var dlg = new OpenFileDialog
+        {
+            Title  = "画像ファイルを選択",
+            Filter = "画像ファイル (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png|すべてのファイル (*.*)|*.*",
+        };
+        if (dlg.ShowDialog() == true)
+            PreviewImagePath = dlg.FileName;
     }
 }
