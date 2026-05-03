@@ -148,6 +148,12 @@ public class MainViewModel : ViewModelBase
 
     public Visibility NoPdfVisibility => PdfPageImage == null ? Visibility.Visible : Visibility.Collapsed;
 
+    // ===== コードセクションタイトル =====
+
+    public string CodeSectionTitle => _selectedPreviewElement != null
+        ? "生成コード（選択中の要素）"
+        : "生成コード（座標情報）";
+
     // ===== プレビュープロパティ =====
 
     public ObservableCollection<PreviewElement> PreviewElements { get; } = new();
@@ -158,7 +164,11 @@ public class MainViewModel : ViewModelBase
         set
         {
             if (SetField(ref _selectedPreviewElement, value))
+            {
                 DeletePreviewCommand?.RaiseCanExecuteChanged();
+                OnPropertyChanged(nameof(CodeSectionTitle));
+                RegenerateCode();
+            }
         }
     }
 
@@ -246,25 +256,27 @@ public class MainViewModel : ViewModelBase
 
     // ===== コマンド =====
 
-    public AsyncRelayCommand OpenPdfCommand   { get; }
-    public AsyncRelayCommand PrevPageCommand  { get; }
-    public AsyncRelayCommand NextPageCommand  { get; }
-    public RelayCommand      CopyCodeCommand  { get; }
-    public RelayCommand      AddPreviewCommand    { get; }
+    public AsyncRelayCommand OpenPdfCommand      { get; }
+    public AsyncRelayCommand PrevPageCommand     { get; }
+    public AsyncRelayCommand NextPageCommand     { get; }
+    public RelayCommand      CopyCodeCommand     { get; }
+    public RelayCommand      AddPreviewCommand   { get; }
     public RelayCommand      DeletePreviewCommand { get; }
-    public RelayCommand      ClearPreviewCommand  { get; }
-    public RelayCommand      SelectImageCommand   { get; }
+    public RelayCommand      ClearPreviewCommand { get; }
+    public RelayCommand      SelectImageCommand  { get; }
+    public RelayCommand      GenerateAllCodeCommand { get; }
 
     public MainViewModel()
     {
-        OpenPdfCommand   = new AsyncRelayCommand(OpenPdfAsync);
-        PrevPageCommand  = new AsyncRelayCommand(PrevPageAsync, () => CurrentPage > 1);
-        NextPageCommand  = new AsyncRelayCommand(NextPageAsync, () => CurrentPage < TotalPages);
-        CopyCodeCommand  = new RelayCommand(CopyCode, () => !string.IsNullOrEmpty(GeneratedCode));
-        AddPreviewCommand    = new RelayCommand(AddPreview, () => _converter.IsInitialized);
+        OpenPdfCommand      = new AsyncRelayCommand(OpenPdfAsync);
+        PrevPageCommand     = new AsyncRelayCommand(PrevPageAsync, () => CurrentPage > 1);
+        NextPageCommand     = new AsyncRelayCommand(NextPageAsync, () => CurrentPage < TotalPages);
+        CopyCodeCommand     = new RelayCommand(CopyCode, () => !string.IsNullOrEmpty(GeneratedCode));
+        AddPreviewCommand   = new RelayCommand(AddPreview, () => _converter.IsInitialized);
         DeletePreviewCommand = new RelayCommand(DeletePreview, () => SelectedPreviewElement != null);
-        ClearPreviewCommand  = new RelayCommand(ClearPreview, () => PreviewElements.Count > 0);
-        SelectImageCommand   = new RelayCommand(SelectImage);
+        ClearPreviewCommand = new RelayCommand(ClearPreview, () => PreviewElements.Count > 0);
+        SelectImageCommand  = new RelayCommand(SelectImage);
+        GenerateAllCodeCommand = new RelayCommand(GenerateAllCode, () => PreviewElements.Count > 0);
     }
 
     // ===== 既存メソッド =====
@@ -349,6 +361,11 @@ public class MainViewModel : ViewModelBase
         _lastCoordinate = new CoordinateInfo { X = x, Y = y, PageNumber = CurrentPage };
         SelectionWidth  = 0;
         SelectionHeight = 0;
+        // 選択を解除してから座標コードを生成
+        _selectedPreviewElement = null;
+        DeletePreviewCommand.RaiseCanExecuteChanged();
+        OnPropertyChanged(nameof(SelectedPreviewElement));
+        OnPropertyChanged(nameof(CodeSectionTitle));
         RegenerateCode();
         CopyCodeCommand.RaiseCanExecuteChanged();
     }
@@ -370,6 +387,11 @@ public class MainViewModel : ViewModelBase
         };
         SelectionWidth  = _lastCoordinate.Width;
         SelectionHeight = _lastCoordinate.Height;
+        // 選択を解除してから座標コードを生成
+        _selectedPreviewElement = null;
+        DeletePreviewCommand.RaiseCanExecuteChanged();
+        OnPropertyChanged(nameof(SelectedPreviewElement));
+        OnPropertyChanged(nameof(CodeSectionTitle));
         RegenerateCode();
         CopyCodeCommand.RaiseCanExecuteChanged();
     }
@@ -377,13 +399,35 @@ public class MainViewModel : ViewModelBase
     private void RegenerateCode()
     {
         var lang = _isCSharpSelected ? CodeLanguage.CSharp : CodeLanguage.VbNet;
-        GeneratedCode = _codeService.Generate(_lastCoordinate, lang);
+        GeneratedCode = _selectedPreviewElement != null
+            ? _codeService.GenerateFromElement(_selectedPreviewElement, CurrentPage, lang)
+            : _codeService.Generate(_lastCoordinate, lang);
+        CopyCodeCommand.RaiseCanExecuteChanged();
     }
 
     private void CopyCode()
     {
         if (!string.IsNullOrEmpty(GeneratedCode))
             Clipboard.SetText(GeneratedCode);
+    }
+
+    private void GenerateAllCode()
+    {
+        var lang = _isCSharpSelected ? CodeLanguage.CSharp : CodeLanguage.VbNet;
+        GeneratedCode = _codeService.GenerateAllElements(PreviewElements, CurrentPage, lang);
+        CopyCodeCommand.RaiseCanExecuteChanged();
+    }
+
+    // ===== 要素移動後の更新（Step B: ドラッグ位置調整） =====
+
+    public void NotifyElementPositionChanged(PreviewElement element)
+    {
+        // 同一要素の再選択でも確実にコードを再生成するため直接フィールドを更新
+        _selectedPreviewElement = element;
+        DeletePreviewCommand?.RaiseCanExecuteChanged();
+        OnPropertyChanged(nameof(SelectedPreviewElement));
+        OnPropertyChanged(nameof(CodeSectionTitle));
+        RegenerateCode();
     }
 
     // ===== プレビューメソッド =====
@@ -403,6 +447,7 @@ public class MainViewModel : ViewModelBase
         };
         PreviewElements.Add(element);
         ClearPreviewCommand.RaiseCanExecuteChanged();
+        GenerateAllCodeCommand.RaiseCanExecuteChanged();
     }
 
     private void DeletePreview()
@@ -412,12 +457,15 @@ public class MainViewModel : ViewModelBase
         SelectedPreviewElement = null;
         DeletePreviewCommand.RaiseCanExecuteChanged();
         ClearPreviewCommand.RaiseCanExecuteChanged();
+        GenerateAllCodeCommand.RaiseCanExecuteChanged();
     }
 
     private void ClearPreview()
     {
         PreviewElements.Clear();
+        SelectedPreviewElement = null;
         ClearPreviewCommand.RaiseCanExecuteChanged();
+        GenerateAllCodeCommand.RaiseCanExecuteChanged();
     }
 
     private void SelectImage()

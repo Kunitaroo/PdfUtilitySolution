@@ -13,8 +13,16 @@ public partial class MainWindow : Window
 {
     private MainViewModel ViewModel => (MainViewModel)DataContext;
 
+    // ===== 範囲選択ドラッグ状態 =====
     private Point _dragStart;
     private bool _isDragging;
+
+    // ===== 要素ドラッグ状態 =====
+    private PreviewElement? _draggingElement;
+    private bool _isDraggingElement;
+    private Point _elementDragStartScreen;
+    private double _elementOrigX;
+    private double _elementOrigY;
 
     public MainWindow()
     {
@@ -200,40 +208,154 @@ public partial class MainWindow : Window
         }
     }
 
-    // ===== マウスイベント =====
+    // ===== ヒットテスト（座標ベース） =====
 
-    private void PdfImage_MouseMove(object sender, MouseEventArgs e)
+    private PreviewElement? FindPreviewElementAt(Point screenPos)
     {
-        var pos = e.GetPosition(PdfImage);
+        var vm = ViewModel;
+        if (!vm.Converter.IsInitialized || vm.PagePointHeight <= 0) return null;
+
+        double scaleY = vm.PageDisplayHeight / vm.PagePointHeight;
+
+        // 後から追加された要素（上に描画）を優先してヒットテスト
+        for (int i = vm.PreviewElements.Count - 1; i >= 0; i--)
+        {
+            var el = vm.PreviewElements[i];
+            if (IsScreenPosInElement(screenPos, el, scaleY))
+                return el;
+        }
+        return null;
+    }
+
+    private bool IsScreenPosInElement(Point screenPos, PreviewElement el, double scaleY)
+    {
+        var conv = ViewModel.Converter;
+        switch (el.Type)
+        {
+            case PreviewElementType.Text:
+            {
+                var (sx, sy) = conv.ToDisplayPx(el.X, el.Y);
+                double fs = Math.Max(el.FontSize * scaleY, 8);
+                // テキスト幅は文字数×フォントサイズで近似（Consolas/等幅フォントを想定）
+                double estW = Math.Max(el.Text.Length * fs * 0.6, 20);
+                return screenPos.X >= sx - 2 && screenPos.X <= sx + estW
+                    && screenPos.Y >= sy - fs - 2 && screenPos.Y <= sy + 2;
+            }
+            case PreviewElementType.Rectangle:
+            case PreviewElementType.Image:
+            {
+                var (left, top)     = conv.ToDisplayPx(el.X, el.Y + el.Height);
+                var (right, bottom) = conv.ToDisplayPx(el.X + el.Width, el.Y);
+                return screenPos.X >= left && screenPos.X <= right
+                    && screenPos.Y >= top  && screenPos.Y <= bottom;
+            }
+            default: return false;
+        }
+    }
+
+    // ===== 要素ドラッグ更新 =====
+
+    private void UpdateElementDragPosition(Point currentScreenPos)
+    {
+        if (_draggingElement == null || !ViewModel.Converter.IsInitialized) return;
+
+        var (startPdfX, startPdfY) = ViewModel.Converter.ToPdfPoints(
+            _elementDragStartScreen.X, _elementDragStartScreen.Y);
+        var (currPdfX, currPdfY) = ViewModel.Converter.ToPdfPoints(
+            currentScreenPos.X, currentScreenPos.Y);
+
+        _draggingElement.X = _elementOrigX + (currPdfX - startPdfX);
+        _draggingElement.Y = _elementOrigY + (currPdfY - startPdfY);
+
+        DrawPreviewOverlay();
+    }
+
+    private void FinalizeElementDrag(Point finalScreenPos)
+    {
+        if (_draggingElement == null) return;
+        UpdateElementDragPosition(finalScreenPos);
+        ViewModel.NotifyElementPositionChanged(_draggingElement);
+    }
+
+    // ===== PreviewCanvas マウスイベント =====
+
+    private void PreviewCanvas_MouseMove(object sender, MouseEventArgs e)
+    {
+        var pos = e.GetPosition(PreviewCanvas);
         ViewModel.UpdateMouseCoordinate(pos.X, pos.Y);
 
-        if (_isDragging)
+        if (_isDraggingElement)
+        {
+            UpdateElementDragPosition(pos);
+        }
+        else if (_isDragging)
+        {
             UpdateDragRect(_dragStart, pos);
-    }
-
-    private void PdfImage_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        _dragStart = e.GetPosition(PdfImage);
-        _isDragging = true;
-        ((UIElement)sender).CaptureMouse();
-    }
-
-    private void PdfImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-    {
-        if (!_isDragging) return;
-        var pos = e.GetPosition(PdfImage);
-        ((UIElement)sender).ReleaseMouseCapture();
-        _isDragging = false;
-
-        SelectionCanvas.Children.Clear();
-
-        double dx = Math.Abs(pos.X - _dragStart.X);
-        double dy = Math.Abs(pos.Y - _dragStart.Y);
-
-        if (dx < 4 && dy < 4)
-            ViewModel.SetClickCoordinate(pos.X, pos.Y);
+        }
         else
-            ViewModel.SetSelection(_dragStart.X, _dragStart.Y, pos.X, pos.Y);
+        {
+            var hit = FindPreviewElementAt(pos);
+            PreviewCanvas.Cursor = hit != null ? Cursors.SizeAll : Cursors.Cross;
+        }
+    }
+
+    private void PreviewCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        var pos = e.GetPosition(PreviewCanvas);
+        var hit = FindPreviewElementAt(pos);
+
+        if (hit != null)
+        {
+            // 要素ドラッグ開始
+            _draggingElement = hit;
+            _isDraggingElement = true;
+            _elementDragStartScreen = pos;
+            _elementOrigX = hit.X;
+            _elementOrigY = hit.Y;
+            PreviewCanvas.CaptureMouse();
+            PreviewCanvas.Cursor = Cursors.SizeAll;
+            e.Handled = true;
+        }
+        else
+        {
+            // 範囲選択ドラッグ開始
+            _dragStart = pos;
+            _isDragging = true;
+            PreviewCanvas.CaptureMouse();
+        }
+    }
+
+    private void PreviewCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        PreviewCanvas.ReleaseMouseCapture();
+        var pos = e.GetPosition(PreviewCanvas);
+
+        if (_isDraggingElement)
+        {
+            _isDraggingElement = false;
+            FinalizeElementDrag(pos);
+            _draggingElement = null;
+            PreviewCanvas.Cursor = Cursors.Cross;
+        }
+        else if (_isDragging)
+        {
+            _isDragging = false;
+            SelectionCanvas.Children.Clear();
+
+            double dx = Math.Abs(pos.X - _dragStart.X);
+            double dy = Math.Abs(pos.Y - _dragStart.Y);
+
+            if (dx < 4 && dy < 4)
+                ViewModel.SetClickCoordinate(pos.X, pos.Y);
+            else
+                ViewModel.SetSelection(_dragStart.X, _dragStart.Y, pos.X, pos.Y);
+        }
+    }
+
+    private void PreviewCanvas_MouseLeave(object sender, MouseEventArgs e)
+    {
+        if (!_isDraggingElement)
+            PreviewCanvas.Cursor = Cursors.Cross;
     }
 
     // ===== ドラッグ矩形描画 =====

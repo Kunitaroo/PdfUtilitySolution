@@ -1,12 +1,40 @@
+using System.ComponentModel;
+
 namespace PdfUtility.PreviewApp.Models;
 
 public enum PreviewElementType { Text, Rectangle, Image }
 
-public class PreviewElement
+public class PreviewElement : INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private double _x;
+    private double _y;
+
     public PreviewElementType Type { get; set; }
-    public double X { get; set; }
-    public double Y { get; set; }
+
+    public double X
+    {
+        get => _x;
+        set
+        {
+            _x = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(X)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DisplayName)));
+        }
+    }
+
+    public double Y
+    {
+        get => _y;
+        set
+        {
+            _y = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Y)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DisplayName)));
+        }
+    }
+
     public double Width { get; set; }
     public double Height { get; set; }
     public string Text { get; set; } = string.Empty;

@@ -151,6 +151,38 @@
             </Setter>
         </Style>
 
+        <!-- アクションボタン（緑） -->
+        <Style x:Key="GreenButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#276749"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,7"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#22543D"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#1C4532"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- 危険ボタン（赤） -->
         <Style x:Key="DangerButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#E53E3E"/>
@@ -310,11 +342,7 @@
                                 <!-- PDF 画像 -->
                                 <Image x:Name="PdfImage"
                                        Source="{Binding PdfPageImage}"
-                                       Stretch="None"
-                                       Cursor="Cross"
-                                       MouseMove="PdfImage_MouseMove"
-                                       MouseLeftButtonDown="PdfImage_MouseLeftButtonDown"
-                                       MouseLeftButtonUp="PdfImage_MouseLeftButtonUp"/>
+                                       Stretch="None"/>
 
                                 <!-- PDF 未読み込みプレースホルダー -->
                                 <Border Visibility="{Binding NoPdfVisibility}"
@@ -341,10 +369,15 @@
                                         ClipToBounds="True"
                                         Visibility="{Binding IsGridVisible, Converter={StaticResource BoolToVis}}"/>
 
-                                <!-- プレビューオーバーレイ（ヒットテスト無効） -->
+                                <!-- プレビューオーバーレイ＋ドラッグハンドラ -->
                                 <Canvas x:Name="PreviewCanvas"
-                                        IsHitTestVisible="False"
-                                        ClipToBounds="True"/>
+                                        ClipToBounds="True"
+                                        Background="Transparent"
+                                        Cursor="Cross"
+                                        MouseMove="PreviewCanvas_MouseMove"
+                                        MouseLeftButtonDown="PreviewCanvas_MouseLeftButtonDown"
+                                        MouseLeftButtonUp="PreviewCanvas_MouseLeftButtonUp"
+                                        MouseLeave="PreviewCanvas_MouseLeave"/>
 
                                 <!-- 選択範囲オーバーレイ（最前面、ヒットテスト無効） -->
                                 <Canvas x:Name="SelectionCanvas"
@@ -372,7 +405,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="12,14,12,14">
 
-                        <!-- 座標情報 -->
+                        <!-- 1. 座標情報 -->
                         <Border Style="{StaticResource CardStyle}">
                             <StackPanel>
                                 <TextBlock Text="座 標 情 報" Style="{StaticResource SectionHeaderStyle}"/>
@@ -424,7 +457,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- 選択範囲 -->
+                        <!-- 2. 選択範囲 -->
                         <Border Style="{StaticResource CardStyle}">
                             <StackPanel>
                                 <TextBlock Text="選 択 範 囲" Style="{StaticResource SectionHeaderStyle}"/>
@@ -451,60 +484,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- 生成コード -->
-                        <Border Style="{StaticResource CardStyle}">
-                            <StackPanel>
-                                <TextBlock Text="生 成 コ ー ド" Style="{StaticResource SectionHeaderStyle}"/>
-
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBlock Text="言語 : "
-                                               Style="{StaticResource LabelStyle}"
-                                               Width="Auto"
-                                               Margin="0,0,8,0"/>
-                                    <RadioButton Content="C#"
-                                                 GroupName="Lang"
-                                                 Style="{StaticResource LangRadioStyle}"
-                                                 IsChecked="{Binding IsCSharpSelected}"
-                                                 Margin="0,0,4,0"/>
-                                    <RadioButton Content="VB.NET"
-                                                 GroupName="Lang"
-                                                 Style="{StaticResource LangRadioStyle}"
-                                                 IsChecked="{Binding IsVbNetSelected}"/>
-                                </StackPanel>
-
-                                <Border BorderBrush="#CBD5E0"
-                                        BorderThickness="1"
-                                        CornerRadius="4"
-                                        Background="#F7FAFC">
-                                    <TextBox Text="{Binding GeneratedCode, Mode=OneWay}"
-                                             IsReadOnly="True"
-                                             FontFamily="Consolas"
-                                             FontSize="11"
-                                             Background="Transparent"
-                                             BorderThickness="0"
-                                             Padding="8,6"
-                                             MinHeight="130"
-                                             MaxHeight="240"
-                                             TextWrapping="NoWrap"
-                                             VerticalScrollBarVisibility="Auto"
-                                             HorizontalScrollBarVisibility="Auto"
-                                             AcceptsReturn="True"
-                                             Foreground="#2D3748"/>
-                                </Border>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- コピーボタン -->
-                        <Button Content="コードをコピー"
-                                Style="{StaticResource ActionButtonStyle}"
-                                Command="{Binding CopyCodeCommand}"
-                                HorizontalAlignment="Stretch"
-                                Margin="0,0,0,16"/>
-
-                        <!-- ======= プレビュー追加セクション ======= -->
-                        <Rectangle Height="1" Fill="#CBD5E0" Margin="0,0,0,14"/>
-
-                        <!-- プレビュー追加 カード -->
+                        <!-- 3. プレビュー追加 -->
                         <Border Style="{StaticResource CardStyle}">
                             <StackPanel>
                                 <TextBlock Text="プ レ ビ ュ ー 追 加" Style="{StaticResource SectionHeaderStyle}"/>
@@ -628,7 +608,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- プレビュー一覧 カード -->
+                        <!-- 4. プレビュー一覧 -->
                         <Border Style="{StaticResource CardStyle}">
                             <StackPanel>
                                 <TextBlock Text="プ レ ビ ュ ー 一 覧" Style="{StaticResource SectionHeaderStyle}"/>
@@ -655,6 +635,64 @@
                                 </StackPanel>
                             </StackPanel>
                         </Border>
+
+                        <!-- 5. 生成コード（タイトル動的） -->
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding CodeSectionTitle}"
+                                           Style="{StaticResource SectionHeaderStyle}"/>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="言語 : "
+                                               Style="{StaticResource LabelStyle}"
+                                               Width="Auto"
+                                               Margin="0,0,8,0"/>
+                                    <RadioButton Content="C#"
+                                                 GroupName="Lang"
+                                                 Style="{StaticResource LangRadioStyle}"
+                                                 IsChecked="{Binding IsCSharpSelected}"
+                                                 Margin="0,0,4,0"/>
+                                    <RadioButton Content="VB.NET"
+                                                 GroupName="Lang"
+                                                 Style="{StaticResource LangRadioStyle}"
+                                                 IsChecked="{Binding IsVbNetSelected}"/>
+                                </StackPanel>
+
+                                <Border BorderBrush="#CBD5E0"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Background="#F7FAFC">
+                                    <TextBox Text="{Binding GeneratedCode, Mode=OneWay}"
+                                             IsReadOnly="True"
+                                             FontFamily="Consolas"
+                                             FontSize="11"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             Padding="8,6"
+                                             MinHeight="130"
+                                             MaxHeight="240"
+                                             TextWrapping="NoWrap"
+                                             VerticalScrollBarVisibility="Auto"
+                                             HorizontalScrollBarVisibility="Auto"
+                                             AcceptsReturn="True"
+                                             Foreground="#2D3748"/>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- コピーボタン -->
+                        <Button Content="コードをコピー"
+                                Style="{StaticResource ActionButtonStyle}"
+                                Command="{Binding CopyCodeCommand}"
+                                HorizontalAlignment="Stretch"
+                                Margin="0,0,0,6"/>
+
+                        <!-- 全コードを生成ボタン -->
+                        <Button Content="全コードを生成"
+                                Style="{StaticResource GreenButtonStyle}"
+                                Command="{Binding GenerateAllCodeCommand}"
+                                HorizontalAlignment="Stretch"
+                                Margin="0,0,0,16"/>
 
                     </StackPanel>
                 </ScrollViewer>
