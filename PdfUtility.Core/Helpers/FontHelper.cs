@@ -21,7 +21,7 @@ namespace PdfUtility.Core.Helpers
         public static byte[] LoadFontBytes(string fontPath, int ttcIndex = 0)
         {
             if (!File.Exists(fontPath))
-                throw new PdfException($"フォントファイルが見つかりません: {fontPath}");
+                throw new PdfLoadException($"フォントファイルが見つかりません: {fontPath}");
 
             string ext = Path.GetExtension(fontPath).ToLowerInvariant();
             byte[] data = File.ReadAllBytes(fontPath);
@@ -31,7 +31,7 @@ namespace PdfUtility.Core.Helpers
             if (ext == ".ttf" || ext == ".otf")
                 return data;
 
-            throw new PdfException($"未対応のフォント形式: {ext}");
+            throw new PdfLoadException($"未対応のフォント形式: {ext}");
         }
 
         /// <summary>

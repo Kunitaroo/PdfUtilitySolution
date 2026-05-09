@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfUtility.SampleApp", "Pdf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfUtility.PreviewApp", "PdfUtility.PreviewApp\PdfUtility.PreviewApp.csproj", "{A8D3E2F1-7C4B-4F5A-B9E8-2D1C3F5A7E90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfUtility.Tests", "PdfUtility.Tests\PdfUtility.Tests.csproj", "{D5F1C2B3-A4E6-4D7F-9A8C-B2E1F3D4C5A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,18 @@ Global
 		{A8D3E2F1-7C4B-4F5A-B9E8-2D1C3F5A7E90}.Release|x64.Build.0 = Release|Any CPU
 		{A8D3E2F1-7C4B-4F5A-B9E8-2D1C3F5A7E90}.Release|x86.ActiveCfg = Release|Any CPU
 		{A8D3E2F1-7C4B-4F5A-B9E8-2D1C3F5A7E90}.Release|x86.Build.0 = Release|Any CPU
+		{D5F1C2B3-A4E6-4D7F-9A8C-B2E1F3D4C5A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5F1C2B3-A4E6-4D7F-9A8C-B2E1F3D4C5A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5F1C2B3-A4E6-4D7F-9A8C-B2E1F3D4C5A7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D5F1C2B3-A4E6-4D7F-9A8C-B2E1F3D4C5A7}.Debug|x64.Build.0 = Debug|Any CPU
+		{D5F1C2B3-A4E6-4D7F-9A8C-B2E1F3D4C5A7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D5F1C2B3-A4E6-4D7F-9A8C-B2E1F3D4C5A7}.Debug|x86.Build.0 = Debug|Any CPU
+		{D5F1C2B3-A4E6-4D7F-9A8C-B2E1F3D4C5A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5F1C2B3-A4E6-4D7F-9A8C-B2E1F3D4C5A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5F1C2B3-A4E6-4D7F-9A8C-B2E1F3D4C5A7}.Release|x64.ActiveCfg = Release|Any CPU
+		{D5F1C2B3-A4E6-4D7F-9A8C-B2E1F3D4C5A7}.Release|x64.Build.0 = Release|Any CPU
+		{D5F1C2B3-A4E6-4D7F-9A8C-B2E1F3D4C5A7}.Release|x86.ActiveCfg = Release|Any CPU
+		{D5F1C2B3-A4E6-4D7F-9A8C-B2E1F3D4C5A7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

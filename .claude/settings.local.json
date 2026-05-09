@@ -15,7 +15,13 @@
       "Bash(Start-Process \"D:\\\\workspace\\\\PdfUtilitySolution\\\\PdfUtility.PreviewApp\\\\bin\\\\Debug\\\\net8.0-windows10.0.19041.0\\\\PdfUtility.PreviewApp.exe\")",
       "Bash(Start-Sleep -Seconds 3)",
       "Bash(ls output *)",
-      "Bash(mkdir output *)"
+      "Bash(mkdir output *)",
+      "Bash(Get-ChildItem -Recurse -Directory)",
+      "Bash(Select-Object -First 30 FullName)",
+      "Bash(xargs grep *)",
+      "Bash(mkdir -p \"D:/workspace/PdfUtilitySolution/PdfUtility.Tests/Helpers\")",
+      "Bash(mkdir -p \"D:/workspace/PdfUtilitySolution/output/tests\")",
+      "Bash(dotnet test *)"
     ]
   }
 }
