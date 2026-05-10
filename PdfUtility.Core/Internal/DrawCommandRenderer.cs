@@ -64,7 +64,9 @@ namespace PdfUtility.Core.Internal
                         if (textFontMap == null || !textFontMap.TryGetValue(txt, out fr))
                             throw new PdfRenderException(
                                 $"TextDrawCommand にフォントリソースが割り当てられていません。Name={txt.Name}");
-                        sb.Append(RenderText(txt, fr, pageHeight));
+                        sb.Append(txt.WritingMode == WritingMode.Vertical
+                            ? RenderTextVertical(txt, fr, pageHeight)
+                            : RenderText(txt, fr, pageHeight));
                         break;
 
                     default:
@@ -221,6 +223,169 @@ namespace PdfUtility.Core.Internal
             sb.Append($"<{hex}> Tj\n");
             sb.Append("ET\n");
             return sb.ToString();
+        }
+
+        // ─────────────────────────────────────────────────────
+        // 縦書きテキストレンダリング
+        // ─────────────────────────────────────────────────────
+
+        /// <summary>
+        /// 縦書きテキストを描画する。
+        ///   ・cmd.X は最初の列（最も右）の中心 X を指す
+        ///   ・cmd.Y は列頭（最上段の文字セル）の上端 Y を指す
+        ///   ・"\n" 区切りで列を分け、新しい列は左へ流れる（cmd.X - colIdx * fontSize）
+        ///   ・各文字は fontSize × fontSize の正方セルを占有し、Y 軸方向に下へ進む
+        ///   ・cmd.Width &gt; 0 のとき列の長さ（縦方向）と解釈し、VerticalTextAlign で配置調整
+        /// 文字種別：
+        ///   ・Upright（直立）：和字・かな・漢字 — そのまま
+        ///   ・Rotated（回転）：ASCII 半角英数記号、長音符ー、括弧類 — 90° 時計回り
+        ///   ・UpperRight（右上）：句読点 。、．， — セルの右上にオフセット
+        /// </summary>
+        private static string RenderTextVertical(TextDrawCommand cmd, FontResource fr, double pageHeight)
+        {
+            if (string.IsNullOrEmpty(cmd.Text)) return "";
+            if (cmd.FontSize <= 0)
+                throw new PdfRenderException($"TextDrawCommand.FontSize が無効です: {cmd.FontSize}");
+
+            string[] columns = cmd.Text.Split('\n');
+            double fontSize = cmd.FontSize;
+            var color = cmd.FontColor ?? PdfColor.Black;
+
+            var sb = new StringBuilder();
+            sb.Append("BT\n");
+            sb.Append($"/{fr.PdfName} {fontSize.F(3)} Tf\n");
+            sb.Append($"{color.ToPdfRgb()} rg\n");
+            if (cmd.IsBold)
+            {
+                double strokeW = Math.Max(fontSize * 0.04, 0.3);
+                sb.Append($"{strokeW.F(3)} w\n");
+                sb.Append($"{color.ToPdfRgb()} RG\n");
+                sb.Append("2 Tr\n");
+            }
+
+            for (int colIdx = 0; colIdx < columns.Length; colIdx++)
+            {
+                string line = columns[colIdx] ?? "";
+                double colCenterX = cmd.X - colIdx * fontSize;
+
+                // 列方向の配置（cmd.Width を列長として扱う）
+                double colStartUserY = cmd.Y;
+                if (cmd.Width > 0 && cmd.VerticalTextAlign != PdfVerticalTextAlign.Top)
+                {
+                    double textHeight = line.Length * fontSize;
+                    double slack = cmd.Width - textHeight;
+                    if (slack > 0)
+                    {
+                        if (cmd.VerticalTextAlign == PdfVerticalTextAlign.Middle)
+                            colStartUserY = cmd.Y + slack / 2.0;
+                        else if (cmd.VerticalTextAlign == PdfVerticalTextAlign.Bottom)
+                            colStartUserY = cmd.Y + slack;
+                    }
+                }
+
+                for (int chIdx = 0; chIdx < line.Length; chIdx++)
+                {
+                    char c = line[chIdx];
+                    int gid;
+                    fr.UnicodeToGlyph.TryGetValue(c, out gid);
+
+                    int advWidth1000 = 0;
+                    fr.GlyphWidths.TryGetValue(gid, out advWidth1000);
+                    double glyphAdvWidth = (double)advWidth1000 * fontSize / fr.UnitsPerEm;
+
+                    double cellTopUserY   = colStartUserY + chIdx * fontSize;
+                    double pdfCellTopY    = pageHeight - cellTopUserY;
+                    double pdfCellBottomY = pdfCellTopY - fontSize;
+
+                    string gidHex = gid.ToString("X4");
+
+                    switch (ClassifyVerticalChar(c))
+                    {
+                        case VerticalCharClass.Rotated:
+                        {
+                            // 90° 時計回り回転：[0 -1 1 0 tx ty]
+                            // (tx, ty) はグリフ原点 (lower-left) の写像先
+                            // 回転後の占有：x ∈ [tx + descender, tx + ascender]、y ∈ [ty - advW, ty]
+                            // (asc + desc)/2 ≈ 0.38 * fontSize として中心合わせ
+                            double tx = colCenterX - fontSize * 0.38;
+                            double ty = pdfCellTopY - fontSize / 2.0 + glyphAdvWidth / 2.0;
+                            sb.Append($"0 -1 1 0 {tx.F(3)} {ty.F(3)} Tm\n");
+                            sb.Append($"<{gidHex}> Tj\n");
+                            break;
+                        }
+                        case VerticalCharClass.UpperRight:
+                        {
+                            // 句読点をセル右上へオフセット（縦書き慣例）
+                            // 通常配置から +0.5em 右、+0.5em 上にずらす
+                            double tx = colCenterX - glyphAdvWidth / 2.0 + fontSize * 0.5;
+                            double ty = pdfCellBottomY + fontSize * 0.62;
+                            sb.Append($"1 0 0 1 {tx.F(3)} {ty.F(3)} Tm\n");
+                            sb.Append($"<{gidHex}> Tj\n");
+                            break;
+                        }
+                        default: // Upright
+                        {
+                            // 通常配置：水平中央・ベースラインはセル底から +0.12em
+                            double tx = colCenterX - glyphAdvWidth / 2.0;
+                            double ty = pdfCellBottomY + fontSize * 0.12;
+                            sb.Append($"1 0 0 1 {tx.F(3)} {ty.F(3)} Tm\n");
+                            sb.Append($"<{gidHex}> Tj\n");
+                            break;
+                        }
+                    }
+                }
+            }
+
+            sb.Append("ET\n");
+            return sb.ToString();
+        }
+
+        /// <summary>縦書きでの文字分類。</summary>
+        private enum VerticalCharClass { Upright, Rotated, UpperRight }
+
+        /// <summary>縦書き時の文字配置種別を返す。</summary>
+        private static VerticalCharClass ClassifyVerticalChar(char c)
+        {
+            // 句読点：右上にオフセット
+            if (c == '。' || c == '、' || c == '．' || c == '，') // 。 、 ．，
+                return VerticalCharClass.UpperRight;
+
+            // 半角ASCII（英数記号）：90度回転
+            if (c >= 0x21 && c <= 0x7E)
+                return VerticalCharClass.Rotated;
+
+            // 長音記号・ダッシュ・ハイフン類：90度回転
+            switch (c)
+            {
+                case 'ー': // ー 長音記号
+                case '―': // ― 水平線
+                case '—': // — em dash
+                case '–': // – en dash
+                case '‐': // ‐ ハイフン
+                case '−': // − minus
+                case '－': // － 全角ハイフン
+                case '〜': // 〜 波形
+                case '～': // ～ 全角波形
+                    return VerticalCharClass.Rotated;
+            }
+
+            // 縦書き用に回転すべき括弧類
+            switch (c)
+            {
+                case '「': case '」': // 「 」
+                case '『': case '』': // 『 』
+                case '（': case '）': // （ ）
+                case '〈': case '〉': // 〈 〉
+                case '《': case '》': // 《 》
+                case '【': case '】': // 【 】
+                case '〔': case '〕': // 〔 〕
+                case '［': case '］': // ［ ］
+                case '｛': case '｝': // ｛ ｝
+                    return VerticalCharClass.Rotated;
+            }
+
+            // CJK・かな等：直立
+            return VerticalCharClass.Upright;
         }
 
         // ─────────────────────────────────────────────────────

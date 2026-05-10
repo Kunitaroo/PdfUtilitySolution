@@ -42,5 +42,18 @@ namespace PdfUtility.Core.Drawing
 
         /// <summary>折り返し（将来拡張用。現バージョンでは未使用）。</summary>
         public bool MultiLine { get; set; }
+
+        /// <summary>
+        /// 書字方向。Horizontal（横書き、既定）または Vertical（縦書き）。
+        /// Vertical のとき X,Y は最初の列の右上を指し、改行で次の列が左へ流れる。
+        /// </summary>
+        public WritingMode WritingMode { get; set; } = WritingMode.Horizontal;
+
+        /// <summary>
+        /// 縦書き時の行揃え（列方向の配置）。
+        /// Width &gt; 0 を列の長さとして扱い、Top/Middle/Bottom で位置を調整する。
+        /// 既定は Top。
+        /// </summary>
+        public PdfVerticalTextAlign VerticalTextAlign { get; set; } = PdfVerticalTextAlign.Top;
     }
 }
