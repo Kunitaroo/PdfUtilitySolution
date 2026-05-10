@@ -65,7 +65,23 @@ namespace PdfUtility.Core.Internal
             int totalSize = GetDictInt(latestTrailer, "Size");
             PdfRef rootRef = GetDictRef(latestTrailer, "Root");
 
-            List<InternalPageInfo> pages = ParsePagesTree(allEntries, rootRef);
+            // 暗号化情報を先に抽出（/Encrypt が無ければ null）
+            PdfEncryptionInfo encryption = ExtractEncryptionInfo(latestTrailer, allEntries);
+
+            // ページツリー解析。暗号化PDFは辞書構造そのものは平文のため通常は読み取り可能。
+            // 失敗した場合（オープンパスワード必須で内部参照が壊れる等）は空リストを返す。
+            List<InternalPageInfo> pages;
+            try
+            {
+                pages = ParsePagesTree(allEntries, rootRef);
+            }
+            catch
+            {
+                if (encryption != null)
+                    pages = new List<InternalPageInfo>();
+                else
+                    throw;
+            }
 
             return new PdfDocumentContext
             {
@@ -74,8 +90,99 @@ namespace PdfUtility.Core.Internal
                 XrefEntries = allEntries,
                 TotalObjectCount = totalSize,
                 RootRef = rootRef,
-                Pages = pages
+                Pages = pages,
+                Encryption = encryption
             };
+        }
+
+        // ─────────────────────────────────────────────────────
+        // 暗号化情報の抽出
+        // ─────────────────────────────────────────────────────
+
+        private PdfEncryptionInfo ExtractEncryptionInfo(
+            Dictionary<string, object> trailer,
+            Dictionary<int, XrefEntry> xrefs)
+        {
+            if (!trailer.TryGetValue("Encrypt", out object encVal)) return null;
+
+            Dictionary<string, object> encDict;
+            if (encVal is PdfRef encRef)
+            {
+                encDict = ReadObjectDict(xrefs, encRef.ObjectNumber);
+                if (encDict == null) return null;
+            }
+            else if (encVal is Dictionary<string, object> direct)
+            {
+                encDict = direct;
+            }
+            else
+            {
+                return null;
+            }
+
+            var info = new PdfEncryptionInfo
+            {
+                Filter        = encDict.TryGetValue("Filter", out var fv) ? fv?.ToString() : null,
+                V             = GetDictInt(encDict, "V"),
+                R             = GetDictInt(encDict, "R"),
+                Permissions   = encDict.TryGetValue("P", out var pv) ? Convert.ToInt32(pv) : -1,
+                OwnerHash     = GetDictBytes(encDict, "O"),
+                UserHash      = GetDictBytes(encDict, "U"),
+            };
+            info.KeyLengthBits = encDict.TryGetValue("Length", out var lv) ? Convert.ToInt32(lv) : 40;
+
+            // /ID は通常トレイラーに [<hex> <hex>] で格納される
+            if (trailer.TryGetValue("ID", out object idVal) && idVal is List<object> idList && idList.Count > 0)
+            {
+                info.FileId = StringToBytes(idList[0] as string);
+            }
+
+            // 標準セキュリティハンドラーの場合、空パスワードで /U が再現できるかを判定
+            int keyLenBytes = info.KeyLengthBits > 0 ? info.KeyLengthBits / 8 : 5;
+            if (keyLenBytes < 5) keyLenBytes = 5;
+            if (keyLenBytes > 16) keyLenBytes = 16;
+
+            bool isStandard = string.Equals(info.Filter, "Standard", StringComparison.Ordinal);
+            if (isStandard
+                && info.OwnerHash != null && info.OwnerHash.Length >= 32
+                && info.UserHash  != null && info.UserHash.Length  >= 32
+                && info.FileId    != null && info.FileId.Length    >  0)
+            {
+                try
+                {
+                    info.IsOpenableWithoutPassword = PdfStandardSecurity.IsEmptyUserPassword(
+                        info.OwnerHash, info.Permissions, info.FileId, info.UserHash,
+                        info.V, info.R, keyLenBytes);
+                }
+                catch
+                {
+                    info.IsOpenableWithoutPassword = false;
+                }
+            }
+
+            // /P のビットで編集系制限を判定
+            // bit 4 (mask 0x08) = modify、bit 6 (mask 0x20) = modify annotations
+            // bit 11 (mask 0x400) = assemble、bit 12 (mask 0x800) = high-quality print
+            int p = info.Permissions;
+            bool canModify            = (p & 0x08)  != 0;
+            bool canModifyAnnotations = (p & 0x20)  != 0;
+            bool canAssemble          = (p & 0x400) != 0;
+            info.HasEditRestrictions  = !canModify || !canModifyAnnotations || !canAssemble;
+
+            return info;
+        }
+
+        private static byte[] StringToBytes(string s)
+        {
+            if (s == null) return null;
+            return Encoding.GetEncoding(28591).GetBytes(s);
+        }
+
+        private static byte[] GetDictBytes(Dictionary<string, object> dict, string key)
+        {
+            if (!dict.TryGetValue(key, out object v)) return null;
+            if (v is string s) return StringToBytes(s);
+            return null;
         }
 
         // ─────────────────────────────────────────────────────

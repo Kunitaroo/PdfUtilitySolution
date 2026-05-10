@@ -21,7 +21,14 @@
       "Bash(xargs grep *)",
       "Bash(mkdir -p \"D:/workspace/PdfUtilitySolution/PdfUtility.Tests/Helpers\")",
       "Bash(mkdir -p \"D:/workspace/PdfUtilitySolution/output/tests\")",
-      "Bash(dotnet test *)"
+      "Bash(dotnet test *)",
+      "Bash(grep -iE \"\\\\.\\(ttc|ttf\\)$\")",
+      "Bash(git log *)",
+      "Bash(grep -iE \"\\(password|secret|api.?key|token.*=|C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\[^/]\\)\")",
+      "Bash(git rm *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(dir D:workspacePdfUtilitySolution *)"
     ]
   }
 }

@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\workspace\\PdfUtilitySolution\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{3CD9DE01-14B4-4388-8817-EB5AB4DF87DC}|PdfUtility.SampleApp\\PdfUtility.SampleApp.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.sampleapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CD9DE01-14B4-4388-8817-EB5AB4DF87DC}|PdfUtility.SampleApp\\PdfUtility.SampleApp.csproj|solutionrelative:pdfutility.sampleapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A8D3E2F1-7C4B-4F5A-B9E8-2D1C3F5A7E90}|PdfUtility.PreviewApp\\PdfUtility.PreviewApp.csproj|d:\\workspace\\pdfutilitysolution\\pdfutility.previewapp\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{A8D3E2F1-7C4B-4F5A-B9E8-2D1C3F5A7E90}|PdfUtility.PreviewApp\\PdfUtility.PreviewApp.csproj|solutionrelative:pdfutility.previewapp\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
@@ -110,11 +114,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.SampleApp\\Program.cs",
+              "RelativeDocumentMoniker": "PdfUtility.SampleApp\\Program.cs",
+              "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.SampleApp\\Program.cs",
+              "RelativeToolTip": "PdfUtility.SampleApp\\Program.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-09T06:21:24.789Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "RelayCommand.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.PreviewApp\\ViewModels\\RelayCommand.cs",
               "RelativeDocumentMoniker": "PdfUtility.PreviewApp\\ViewModels\\RelayCommand.cs",
@@ -126,7 +143,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "MainViewModel.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.PreviewApp\\ViewModels\\MainViewModel.cs",
               "RelativeDocumentMoniker": "PdfUtility.PreviewApp\\ViewModels\\MainViewModel.cs",
@@ -138,7 +155,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.PreviewApp\\MainWindow.xaml",
               "RelativeDocumentMoniker": "PdfUtility.PreviewApp\\MainWindow.xaml",
@@ -150,19 +167,18 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "App.xaml",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.PreviewApp\\App.xaml",
               "RelativeDocumentMoniker": "PdfUtility.PreviewApp\\App.xaml",
               "ToolTip": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.PreviewApp\\App.xaml",
               "RelativeToolTip": "PdfUtility.PreviewApp\\App.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-05-01T13:26:53.2Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-01T13:26:53.2Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "PdfImageHelper.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\PdfImageHelper.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Internal\\PdfImageHelper.cs",
@@ -174,7 +190,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "FontResource.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\FontResource.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Internal\\FontResource.cs",
@@ -186,7 +202,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "DrawCommandRenderer.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\DrawCommandRenderer.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Internal\\DrawCommandRenderer.cs",
@@ -198,7 +214,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "FontHelper.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Helpers\\FontHelper.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Helpers\\FontHelper.cs",
@@ -210,7 +226,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "PdfRenderException.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Exceptions\\PdfRenderException.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Exceptions\\PdfRenderException.cs",
@@ -222,7 +238,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "TextDrawCommand.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\TextDrawCommand.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\TextDrawCommand.cs",
@@ -234,7 +250,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "RectangleDrawCommand.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\RectangleDrawCommand.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\RectangleDrawCommand.cs",
@@ -246,7 +262,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "PdfRawParser.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\PdfRawParser.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Internal\\PdfRawParser.cs",
@@ -258,7 +274,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "PdfDocumentContext.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Internal\\PdfDocumentContext.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Internal\\PdfDocumentContext.cs",
@@ -270,7 +286,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "PdfVerticalAlign.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\PdfVerticalAlign.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\PdfVerticalAlign.cs",
@@ -282,7 +298,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "PdfHorizontalAlign.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\PdfHorizontalAlign.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\PdfHorizontalAlign.cs",
@@ -294,7 +310,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "PdfDrawCommand.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\PdfDrawCommand.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\PdfDrawCommand.cs",
@@ -306,7 +322,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "PdfPageInfo.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Documents\\PdfPageInfo.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Documents\\PdfPageInfo.cs",
@@ -318,7 +334,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "PdfDocumentInfo.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Documents\\PdfDocumentInfo.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Documents\\PdfDocumentInfo.cs",
@@ -330,7 +346,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "PdfException.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Exceptions\\PdfException.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Exceptions\\PdfException.cs",
@@ -342,7 +358,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "PdfLoadException.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Exceptions\\PdfLoadException.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Exceptions\\PdfLoadException.cs",
@@ -354,7 +370,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "PdfColor.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\PdfColor.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\PdfColor.cs",
@@ -366,7 +382,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "LineDrawCommand.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\LineDrawCommand.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\LineDrawCommand.cs",
@@ -378,7 +394,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "ImageDrawCommand.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\Drawing\\ImageDrawCommand.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\Drawing\\ImageDrawCommand.cs",
@@ -390,7 +406,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 24,
               "Title": "PdfIncrementalWriter.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtility.Core\\PdfIncrementalWriter.cs",
               "RelativeDocumentMoniker": "PdfUtility.Core\\PdfIncrementalWriter.cs",
@@ -402,7 +418,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 25,
               "Title": "Class1.cs",
               "DocumentMoniker": "D:\\workspace\\PdfUtilitySolution\\PdfUtilitySolution\\Class1.cs",
               "RelativeDocumentMoniker": "PdfUtilitySolution\\Class1.cs",

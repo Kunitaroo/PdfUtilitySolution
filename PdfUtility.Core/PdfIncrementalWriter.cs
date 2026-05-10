@@ -8,6 +8,8 @@ using PdfUtility.Core.Drawing;
 using PdfUtility.Core.Exceptions;
 using PdfUtility.Core.Helpers;
 using PdfUtility.Core.Internal;
+using PdfUtility.Core.Options;
+using PdfUtility.Core.Services;
 
 namespace PdfUtility.Core
 {
@@ -29,13 +31,20 @@ namespace PdfUtility.Core
         private readonly Dictionary<int, List<PdfDrawCommand>> _pageCommands;
         private int _nextObjNum;
 
-        public PdfIncrementalWriter(byte[] pdfBytes)
+        public PdfIncrementalWriter(byte[] pdfBytes) : this(pdfBytes, null) { }
+
+        public PdfIncrementalWriter(byte[] pdfBytes, PdfUtilityOptions options)
         {
             if (pdfBytes == null) throw new ArgumentNullException(nameof(pdfBytes));
             if (pdfBytes.Length == 0) throw new PdfLoadException("PDFバイト列が空です。");
 
             var parser = new PdfRawParser(pdfBytes);
             _ctx = parser.Parse();
+
+            // 暗号化・パーミッションのチェック（オプションに応じて例外または警告）
+            var reader = new PdfReaderService(options);
+            reader.ApplyEncryptionPolicy(_ctx.Encryption);
+
             _pageContentStreams = new Dictionary<int, List<string>>();
             _pageCommands = new Dictionary<int, List<PdfDrawCommand>>();
             _nextObjNum = _ctx.TotalObjectCount;

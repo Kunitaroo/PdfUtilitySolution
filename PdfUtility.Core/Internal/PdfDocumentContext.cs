@@ -26,6 +26,50 @@ namespace PdfUtility.Core.Internal
 
         /// <summary>ページ情報リスト（インデックス0 = ページ1）。</summary>
         internal List<InternalPageInfo> Pages { get; set; }
+
+        /// <summary>暗号化情報。/Encrypt が無いPDFでは null。</summary>
+        internal PdfEncryptionInfo Encryption { get; set; }
+    }
+
+    /// <summary>
+    /// /Encrypt 辞書から取得した暗号化メタ情報。
+    /// </summary>
+    internal class PdfEncryptionInfo
+    {
+        /// <summary>セキュリティハンドラー名（通常は "Standard"）。</summary>
+        internal string Filter { get; set; }
+
+        /// <summary>暗号化アルゴリズムバージョン（V）。</summary>
+        internal int V { get; set; }
+
+        /// <summary>標準セキュリティハンドラーのリビジョン（R）。</summary>
+        internal int R { get; set; }
+
+        /// <summary>キー長（ビット）。</summary>
+        internal int KeyLengthBits { get; set; }
+
+        /// <summary>パーミッションフラグ（P）。32bit 符号付き。</summary>
+        internal int Permissions { get; set; }
+
+        /// <summary>オーナーパスワードハッシュ（O）。32 バイト。</summary>
+        internal byte[] OwnerHash { get; set; }
+
+        /// <summary>ユーザーパスワードハッシュ（U）。32 バイト。</summary>
+        internal byte[] UserHash { get; set; }
+
+        /// <summary>トレイラー /ID 配列の先頭要素（ファイルID）。</summary>
+        internal byte[] FileId { get; set; }
+
+        /// <summary>
+        /// 空のオープンパスワード（パスワードなし）で開けるかどうか。
+        /// true なら「パーミッション専用」、false なら「オープンパスワード必須」。
+        /// </summary>
+        internal bool IsOpenableWithoutPassword { get; set; }
+
+        /// <summary>
+        /// 編集・変更系の制限が掛かっているかどうか。/P の bit 4（modify）または bit 6（modify annotations）が無効。
+        /// </summary>
+        internal bool HasEditRestrictions { get; set; }
     }
 
     /// <summary>

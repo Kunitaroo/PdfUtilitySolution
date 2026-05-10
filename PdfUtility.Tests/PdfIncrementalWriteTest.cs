@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PdfUtility.Core;
 using PdfUtility.Core.Drawing;
 using PdfUtility.Core.Exceptions;
+using PdfUtility.Core.Options;
 using PdfUtility.Tests.Helpers;
 
 namespace PdfUtility.Tests;
@@ -228,5 +229,76 @@ public class PdfIncrementalWriteTest
             threw = true;
         }
         Assert.IsTrue(threw, "存在しないページ番号では例外が発生すること");
+    }
+
+    // ── testdata 生成（一度実行すれば testdata/ に PDF が出力される） ────────
+
+    [TestMethod]
+    [TestCategory("TestDataSetup")]
+    public void _GenerateEncryptionTestPdfs()
+    {
+        Directory.CreateDirectory(TestHelper.TestdataDir);
+
+        byte[] encrypted = TestHelper.CreateEncryptedPdf(
+            userPassword:    "secret123",
+            ownerPassword:   "secret123",
+            permissionFlags: -4);
+        File.WriteAllBytes(Path.Combine(TestHelper.TestdataDir, "encrypted.pdf"), encrypted);
+
+        byte[] permissionLocked = TestHelper.CreateEncryptedPdf(
+            userPassword:    "",
+            ownerPassword:   "ownerpass",
+            permissionFlags: unchecked((int)0xFFFFFBD4));
+        File.WriteAllBytes(Path.Combine(TestHelper.TestdataDir, "permission_locked.pdf"), permissionLocked);
+    }
+
+    // ── 4. 暗号化・パーミッションPDFテスト ─────────────────────────────────
+
+    [TestMethod]
+    [TestCategory("PdfIncremental")]
+    public void Load_EncryptedPdf_ThrowsPdfLoadException()
+    {
+        // オープンパスワード付き暗号化PDF（ユーザー/オーナー両方に "secret123"）
+        byte[] encryptedPdf = TestHelper.CreateEncryptedPdf(
+            userPassword:    "secret123",
+            ownerPassword:   "secret123",
+            permissionFlags: -4); // 全許可
+
+        var ex = Assert.ThrowsException<PdfLoadException>(
+            () => new PdfIncrementalWriter(encryptedPdf));
+        StringAssert.Contains(ex.Message, "パスワード保護");
+    }
+
+    [TestMethod]
+    [TestCategory("PdfIncremental")]
+    public void Load_PermissionLockedPdf_ThrowsPdfLoadException()
+    {
+        // パスワード無し・編集禁止のPDF（modify(0x08) と modify_annotations(0x20) と assemble(0x400) をクリア）
+        // P = -1068 = 0xFFFFFBD4
+        byte[] permissionPdf = TestHelper.CreateEncryptedPdf(
+            userPassword:    "",
+            ownerPassword:   "ownerpass",
+            permissionFlags: unchecked((int)0xFFFFFBD4));
+
+        var ex = Assert.ThrowsException<PdfLoadException>(
+            () => new PdfIncrementalWriter(permissionPdf));
+        StringAssert.Contains(ex.Message, "編集が禁止");
+    }
+
+    [TestMethod]
+    [TestCategory("PdfIncremental")]
+    public void Load_PermissionLockedPdf_WithRejectFalse_ContinuesProcessing()
+    {
+        byte[] permissionPdf = TestHelper.CreateEncryptedPdf(
+            userPassword:    "",
+            ownerPassword:   "ownerpass",
+            permissionFlags: unchecked((int)0xFFFFFBD4));
+
+        var options = new PdfUtilityOptions { RejectPermissionLockedPdf = false };
+
+        // 例外が発生せず、Writerが構築できることを検証
+        var writer = new PdfIncrementalWriter(permissionPdf, options);
+        Assert.IsNotNull(writer, "RejectPermissionLockedPdf=false なら Load が成功すること");
+        Assert.AreEqual(1, writer.PageCount, "ページ数が取得できること");
     }
 }
