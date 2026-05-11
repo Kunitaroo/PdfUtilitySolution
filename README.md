@@ -23,6 +23,9 @@ PDFSharp などの既存 OSS ライブラリは **TTC 形式の日本語フォ�
 - ✅ **TTC / TTF 両対応** — MS明朝・MSゴシック・メイリオ等の日本語フォントをそのまま使用可能
 - ✅ **フォントライセンス自動判定** — OS/2テーブルのfsTypeを読み取り埋め込み可否を自動判断
 - ✅ **インクリメンタルアップデート方式** — 既存PDFのバイト列を一切変更せず末尾に追記
+- ✅ **縦書き対応** — 日本語帳票に必要な縦書きテキスト出力
+- ✅ **縦中横対応** — 縦書き内の英数字を正立表示
+- ✅ **暗号化PDF対応** — パスワード保護・パーミッション設定PDFを安全に検出
 - ✅ **シンプルなAPI** — C# / VB.NET どちらでも使いやすい設計
 - ✅ **座標確認ツール付き** — WPFアプリで追記位置をビジュアルに確認可能
 
@@ -46,7 +49,7 @@ PdfUtilitySolution
 ├── PdfUtility.Core          ← メインDLL（配布物）
 ├── PdfUtility.Barcode       ← バーコード専用DLL
 ├── PdfUtility.SampleApp     ← 動作確認用コンソールアプリ
-├── PdfUtility.Tests         ← 単体テスト（66件）
+├── PdfUtility.Tests         ← 単体テスト（80件）
 └── PdfUtility.PreviewApp    ← PDF座標確認ツール（WPF）
 ```
 
@@ -155,6 +158,9 @@ pdf.Save("C:\output\result.pdf")
 | FontColor | PdfColor | 文字色 |
 | IsBold | bool | 太字 |
 | HorizontalAlign | PdfHorizontalAlign | 水平配置（Left/Center/Right） |
+| WritingMode | WritingMode | 横書き / 縦書き（v2追加） |
+| TateChuYoko | bool | 縦中横を有効にするか（v2.1追加） |
+| TateChuYokoMaxChars | int | 縦中横の最大文字数（デフォルト2） |
 
 ### RectangleDrawCommand（矩形）
 
@@ -187,6 +193,78 @@ pdf.Save("C:\output\result.pdf")
 
 ---
 
+## 🈳 縦書き対応（v2）
+
+日本語帳票に必要な縦書きテキスト出力に対応しています。
+
+### 基本的な縦書き（C#）
+
+```csharp
+new TextDrawCommand
+{
+    PageNumber = 1,
+    X = 500, Y = 750,
+    Text = "山路を登りながら考えた。",
+    FontName = "MS明朝",
+    FontSize = 12,
+    FontColor = PdfColor.Black,
+    WritingMode = WritingMode.Vertical  // 縦書き指定
+}
+```
+
+### 縦中横（C#）
+
+縦書き内の英数字を正立表示します。
+
+```csharp
+new TextDrawCommand
+{
+    PageNumber = 1,
+    X = 500, Y = 750,
+    Text = "令和5年12月25日",
+    FontName = "MS明朝",
+    FontSize = 12,
+    WritingMode = WritingMode.Vertical,
+    TateChuYoko = true,          // 縦中横を有効化
+    TateChuYokoMaxChars = 2      // 2文字以内を横向きで表示
+}
+```
+
+### 文字分類と表示方法
+
+| 文字種別 | 対象 | 表示方法 |
+|---------|------|---------|
+| Upright（直立） | 漢字・ひらがな・カタカナ | 正立で表示 |
+| Rotated（90°回転） | ASCII・ダッシュ類 | 時計回りに回転 |
+| UpperRight（右上） | 句読点（。、.,） | セル右上にオフセット |
+| 縦中横 | 連続する半角英数字 | 正立で表示（TateChuYoko=true時） |
+
+---
+
+## 🔒 暗号化・パーミッションPDF対応（v2）
+
+### 自動検出機能
+
+PDFを読み込む際に暗号化・パーミッション設定を自動検出します。
+
+```csharp
+var options = new PdfUtilityOptions
+{
+    RejectEncryptedPdf = true,         // パスワード保護PDFを拒否
+    RejectPermissionLockedPdf = true   // 編集禁止PDFを拒否
+};
+```
+
+### 検出される状態
+
+| 状態 | 動作 |
+|------|------|
+| パスワード保護PDF | PdfLoadExceptionをスロー |
+| 編集禁止PDF | PdfLoadExceptionをスロー |
+| 通常のPDF | そのまま処理続行 |
+
+---
+
 ## 🔤 フォントについて
 
 ### 対応フォント形式
@@ -204,8 +282,6 @@ pdf.Save("C:\output\result.pdf")
 | msgothic.ttc | MSゴシック | MS Pゴシック | MS UIゴシック |
 
 ### フォント埋め込みの自動判定
-
-フォントファイル内の `fsType` フラグを自動読み取りし、埋め込み可否を判断します。
 
 | fsType | 意味 | 動作 |
 |--------|------|------|
@@ -256,6 +332,7 @@ Visual Studio に貼り付けて使用
 | DefaultTtcFontIndex | int | 0 | TTCのデフォルトインデックス |
 | RejectSignedPdf | bool | false | 署名済みPDFを拒否するか |
 | RejectEncryptedPdf | bool | false | 暗号化PDFを拒否するか |
+| RejectPermissionLockedPdf | bool | false | 編集禁止PDFを拒否するか（v2追加） |
 
 ---
 
@@ -296,7 +373,7 @@ catch (PdfException ex)
 単体テストは MSTest で実装されています。
 
 ```
-テスト件数：66件
+テスト件数：80件
 全件合格確認済み
 ```
 
@@ -305,23 +382,43 @@ catch (PdfException ex)
 | FontEngineTest | 9件 | TTC/TTF読み込み・fsType判定 |
 | PdfCoordinateTest | 15件 | 座標変換 |
 | PdfImageDrawTest | 8件 | 画像埋め込み |
-| PdfIncrementalWriteTest | 12件 | PDF追記 |
+| PdfIncrementalWriteTest | 15件 | PDF追記・暗号化検出 |
 | PdfShapeDrawTest | 10件 | 図形・枠描画 |
 | PdfTextDrawTest | 12件 | テキスト描画 |
+| PdfVerticalTextTest | 11件 | 縦書き・縦中横 |
 
 ---
 
-## 📋 v1 のスコープ
+## 📋 バージョン履歴
+
+### v2.1
+- 縦中横（たてちゅうよこ）対応
+- 縦書き内の英数字を正立表示
+
+### v2.0
+- 縦書きテキスト対応
+- 暗号化・パーミッションPDF検出対応
+- RejectPermissionLockedPdfオプション追加
+
+### v1.0
+- 既存PDFへのテキスト・図形・画像の追記
+- TTC/TTF日本語フォント対応
+- fsTypeによるフォント埋め込み自動判定
+- PDF座標確認ツール（PreviewApp）
+
+---
+
+## 📋 スコープ
 
 | 機能 | 対応状況 |
 |------|---------|
 | 既存PDFへの追記 | ✅ 対応 |
 | テキスト・図形・画像の追記 | ✅ 対応 |
 | TTC / TTF フォント | ✅ 対応 |
+| 縦書き・縦中横 | ✅ 対応（v2） |
+| 暗号化PDF検出 | ✅ 対応（v2） |
 | 新規PDFの作成 | ❌ 対象外 |
 | 既存テキストの編集 | ❌ 対象外 |
-| 暗号化PDF | ❌ 対象外 |
-| 縦書き | ❌ 対象外 |
 
 ---
 
